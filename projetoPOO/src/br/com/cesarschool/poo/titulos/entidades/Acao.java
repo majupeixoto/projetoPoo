@@ -26,7 +26,7 @@ public class Acao extends Ativo{
 	}
 	
 	public void setValorUnitario(double valorUnitario) {
-		this.valorUnitario= valorUnitario;
+		this.valorUnitario = valorUnitario;
 	}
 	
 	public double calcularPrecoTransacao(double montante) {
