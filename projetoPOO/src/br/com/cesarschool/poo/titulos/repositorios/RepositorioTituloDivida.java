@@ -129,7 +129,7 @@ public class RepositorioTituloDivida {
             return false;
         }
 	}
-	public Acao buscar(int identificador) {
+	public TituloDivida buscar(int identificador) {
 		try(BufferedReader reader = new BufferedReader(new FileReader("TituloDivida.txt"))){
 			String line;
             while ((line = reader.readLine()) != null) {
@@ -140,7 +140,7 @@ public class RepositorioTituloDivida {
                     String nome = frases[1];
                     LocalDate dataValidade = LocalDate.parse(frases[2], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     double taxaJuros = Double.parseDouble(frases[3]);
-                    return new Acao(identificador, nome, dataValidade, taxaJuros);
+                    return new TituloDivida(identificador, nome, dataValidade, taxaJuros);
                 }
             }
 		} catch (IOException e) {
