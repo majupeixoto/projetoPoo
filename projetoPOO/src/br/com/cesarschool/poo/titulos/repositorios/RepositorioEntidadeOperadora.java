@@ -1,4 +1,15 @@
 package br.com.cesarschool.poo.titulos.repositorios;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.cesarschool.poo.titulos.entidades.EntidadeOperadora;
+
 /*
  * Deve gravar em e ler de um arquivo texto chamado Acao.txt os dados dos objetos do tipo
  * Acao. Seguem abaixo exemplos de linhas.
@@ -23,5 +34,130 @@ package br.com.cesarschool.poo.titulos.repositorios;
  * objeto. Caso o identificador não seja encontrado no arquivo, retornar null.   
  */
 public class RepositorioEntidadeOperadora {
+	public boolean incluir(EntidadeOperadora entidadeOperadora) {
+        if (idDuplicado(entidadeOperadora.getIdentificador())) {
+            return false;
+        }
 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("EntidadeOperadora.txt", true))) {
+            String linha = entidadeOperadora.getIdentificador() + ";" + entidadeOperadora.getNome() + ";" + entidadeOperadora.getAutorizadoAcao();
+            writer.write(linha);
+            writer.newLine();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean alterar(EntidadeOperadora entidadeOperadora) {
+        List<String> linhas = new ArrayList<>();
+        boolean encontrado = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] dados = line.split(";");
+                long idPresente = Long.parseLong(dados[0]);
+
+                if (idPresente == entidadeOperadora.getIdentificador()) {
+                    linhas.add(entidadeOperadora.getIdentificador() + ";" + entidadeOperadora.getNome() + ";" + entidadeOperadora.getAutorizadoAcao());
+                    encontrado = true;
+                } else {
+                    linhas.add(line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (!encontrado) {
+            return false;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("EntidadeOperadora.txt"))) {
+            for (String linha : linhas) {
+                writer.write(linha);
+                writer.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean excluir(long identificador) {
+        List<String> linhas = new ArrayList<>();
+        boolean encontrado = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] dados = line.split(";");
+                long idPresente = Long.parseLong(dados[0]);
+
+                if (idPresente != identificador) {
+                    linhas.add(line);
+                } else {
+                    encontrado = true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (!encontrado) {
+            return false;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("EntidadeOperadora.txt"))) {
+            for (String linha : linhas) {
+                writer.write(linha);
+                writer.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public EntidadeOperadora buscar(long identificador) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] dados = line.split(";");
+                long idPresente = Long.parseLong(dados[0]);
+
+                if (idPresente == identificador) {
+                    String nome = dados[1];
+                    boolean autorizadoAcao = Boolean.parseBoolean(dados[2]);
+                    return new EntidadeOperadora(idPresente, nome, autorizadoAcao, 0.0, 0.0);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private boolean idDuplicado(long identificador) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] dados = line.split(";");
+                long idPresente = Long.parseLong(dados[0]);
+
+                if (idPresente == identificador) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
