@@ -1,4 +1,8 @@
 package br.com.cesarschool.poo.titulos.mediators;
+
+import br.com.cesarschool.poo.titulos.entidades.EntidadeOperadora;
+import br.com.cesarschool.poo.titulos.repositorios.RepositorioEntidadeOperadora;
+
 /*
  * Deve ser um singleton.
  * 
@@ -48,6 +52,75 @@ package br.com.cesarschool.poo.titulos.mediators;
  * Se este for válido, deve chamar o buscar do repositório, retornando o 
  * que ele retornar. Se o identificador for inválido, retornar null. 
  */
-public class MediatorEntdadeOperadora {
+public class MediatorEntidadeOperadora {
+	private static MediatorEntidadeOperadora instanciaUnica;
+	private final RepositorioEntidadeOperadora repositorioEntidadeOperadora = new RepositorioEntidadeOperadora();
+	
+	private MediatorEntidadeOperadora() {}
+	
+	public static MediatorEntidadeOperadora getInstance() {
+        if (instanciaUnica == null) {
+        	instanciaUnica = new MediatorEntidadeOperadora();
+        }
+        return instanciaUnica;
+    }
+	
+	private String validar(EntidadeOperadora entidade) {
+		if(entidade.getIdentificador() < 100 || entidade.getIdentificador() > 1000000) {
+			return "Identificador deve estar entre 1 e 99999.";
+		}
+		
+		if(entidade.getNome() == null || entidade.getNome().trim().isEmpty()) {
+			return "Nome deve ser preenchido.";
+		}
+		
+		if(entidade.getNome().length() < 10 || entidade.getNome().length() > 100) {
+			return "Nome deve ter entre 10 e 100 caracteres.";
+		}
+		return null;
+	}
+	
+	public String incluir(EntidadeOperadora entidade) {
+        String mensagemValidar = validar(entidade);
+        if (mensagemValidar == null) {
+            if (repositorioEntidadeOperadora.incluir(entidade)) {
+                return null;
+            } else {
+                return "Entidade já existente";
+            }
+        }
+        return mensagemValidar;
+    }
 
+    public String alterar(EntidadeOperadora entidade) {
+        String mensagemValidar = validar(entidade);
+        if (mensagemValidar == null) {
+            if (repositorioEntidadeOperadora.alterar(entidade)) {
+                return null;
+            } else {
+                return "Entidade inexistente";
+            }
+        }
+        return mensagemValidar;
+    }
+
+    public String excluir(int identificador) {
+        if (identificador <= 0 || identificador >= 100000) {
+            return "Identificador inválido.";
+        }
+
+        if (repositorioEntidadeOperadora.excluir(identificador)) {
+            return null;
+        } else {
+            return "Entidade inexistente";
+        }
+    }
+
+    public EntidadeOperadora buscar(int identificador) {
+        if (identificador <= 0 || identificador >= 100000) {
+            return null;
+        }
+
+        return repositorioEntidadeOperadora.buscar(identificador);
+    }
 }
