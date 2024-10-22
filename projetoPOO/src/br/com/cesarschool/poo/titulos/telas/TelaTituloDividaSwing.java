@@ -1,21 +1,16 @@
 package br.com.cesarschool.poo.titulos.telas;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
-
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
 import br.com.cesarschool.poo.titulos.entidades.TituloDivida;
 import br.com.cesarschool.poo.titulos.mediators.MediatorTituloDivida;
 
-public class TelaTituloDividaSwing extends JFrame {
+public class TelaTituloDividaSwing extends JPanel { // Mudou de JFrame para JPanel
 	
 	private static final long serialVersionUID = 1L;
 
@@ -31,75 +26,44 @@ public class TelaTituloDividaSwing extends JFrame {
 	public TelaTituloDividaSwing(MediatorTituloDivida mediatorTituloDivida) {
 		this.mediatorTituloDivida = mediatorTituloDivida;
 		
-		setTitle("Gerenciamento de Títulos de Dívida");
-		setSize(400, 300);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+		setLayout(new GridLayout(7, 2));
 		
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(6, 2));
-		
-		panel.add(new JLabel("Identificador:"));
+		add(new JLabel("Identificador:"));
 		txtIdentificador = new JTextField();
-		panel.add(txtIdentificador);
+		add(txtIdentificador);
 
-		panel.add(new JLabel("Nome:"));
+		add(new JLabel("Nome:"));
 		txtNome = new JTextField();
-		panel.add(txtNome);
+		add(txtNome);
 
-		panel.add(new JLabel("Data de Validade (yyyy-MM-dd):"));
+		add(new JLabel("Data de Validade (yyyy-MM-dd):"));
 		txtDataDeValidade = new JTextField();
-		panel.add(txtDataDeValidade);
+		add(txtDataDeValidade);
 
-		panel.add(new JLabel("Taxa de Juros:"));
+		add(new JLabel("Taxa de Juros:"));
 		txtTaxaJuros = new JTextField();
-		panel.add(txtTaxaJuros);
+		add(txtTaxaJuros);
 		
 		JButton btnIncluir = new JButton("Incluir");
 		JButton btnAlterar = new JButton("Alterar");
 		JButton btnExcluir = new JButton("Excluir");
 		JButton btnBuscar = new JButton("Buscar");
 
-		panel.add(btnIncluir);
-		panel.add(btnAlterar);
-		panel.add(btnExcluir);
-		panel.add(btnBuscar);
+		add(btnIncluir);
+		add(btnAlterar);
+		add(btnExcluir);
+		add(btnBuscar);
 		
 		txtStatus = new JTextArea();
 		txtStatus.setEditable(false);
-		panel.add(new JLabel("Status:"));
-		panel.add(txtStatus);
+		add(new JLabel("Status:"));
+		add(txtStatus);
 
-		add(panel);
-		
 		// Ação dos botões
-		btnIncluir.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				incluirTituloDivida();
-			}
-		});
-
-		btnAlterar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				alterarTituloDivida();
-			}
-		});
-
-		btnExcluir.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				excluirTituloDivida();
-			}
-		});
-
-		btnBuscar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				buscarTituloDivida();
-			}
-		});
+		btnIncluir.addActionListener(e -> incluirTituloDivida());
+		btnAlterar.addActionListener(e -> alterarTituloDivida());
+		btnExcluir.addActionListener(e -> excluirTituloDivida());
+		btnBuscar.addActionListener(e -> buscarTituloDivida());
 	}
 	
 	// MÉTODOS

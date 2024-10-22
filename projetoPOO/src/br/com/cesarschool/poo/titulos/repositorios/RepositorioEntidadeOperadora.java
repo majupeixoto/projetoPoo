@@ -34,12 +34,15 @@ import br.com.cesarschool.poo.titulos.entidades.EntidadeOperadora;
  * objeto. Caso o identificador não seja encontrado no arquivo, retornar null.   
  */
 public class RepositorioEntidadeOperadora {
+	
+	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/EntidadeOperadora.txt";
+
 	public boolean incluir(EntidadeOperadora entidadeOperadora) {
         if (idDuplicado(entidadeOperadora.getIdentificador())) {
             return false;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("EntidadeOperadora.txt", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))) {
             String linha = entidadeOperadora.getIdentificador() + ";" + entidadeOperadora.getNome() + ";" + entidadeOperadora.getAutorizadoAcao();
             writer.write(linha);
             writer.newLine();
@@ -54,7 +57,7 @@ public class RepositorioEntidadeOperadora {
         List<String> linhas = new ArrayList<>();
         boolean encontrado = false;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] dados = line.split(";");
@@ -76,7 +79,7 @@ public class RepositorioEntidadeOperadora {
             return false;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("EntidadeOperadora.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
             for (String linha : linhas) {
                 writer.write(linha);
                 writer.newLine();
@@ -92,7 +95,7 @@ public class RepositorioEntidadeOperadora {
         List<String> linhas = new ArrayList<>();
         boolean encontrado = false;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] dados = line.split(";");
@@ -113,7 +116,7 @@ public class RepositorioEntidadeOperadora {
             return false;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("EntidadeOperadora.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
             for (String linha : linhas) {
                 writer.write(linha);
                 writer.newLine();
@@ -126,7 +129,7 @@ public class RepositorioEntidadeOperadora {
     }
 
     public EntidadeOperadora buscar(long identificador) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] dados = line.split(";");
@@ -145,7 +148,7 @@ public class RepositorioEntidadeOperadora {
     }
 
     private boolean idDuplicado(long identificador) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("EntidadeOperadora.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] dados = line.split(";");

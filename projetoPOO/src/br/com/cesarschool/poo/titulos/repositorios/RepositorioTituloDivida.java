@@ -37,12 +37,14 @@ import br.com.cesarschool.poo.titulos.entidades.TituloDivida;
  * objeto. Caso o identificador não seja encontrado no arquivo, retornar null.   
  */
 public class RepositorioTituloDivida {
+	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/TituloDivida.txt";
+
 	public boolean incluir(TituloDivida tituloDivida) {
 		if(idDuplicado(tituloDivida.getIdentificador())) {
 			 return false;
 		 }
 
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter("TituloDivida.txt", true))){
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))){
 			String linha = tituloDivida.getIdentificador() + ";" + tituloDivida.getNome() + ";" + tituloDivida.getDataDeValidade() + ";" + tituloDivida.getTaxaJuros();
 			writer.write(linha);
 			writer.newLine();
@@ -58,7 +60,7 @@ public class RepositorioTituloDivida {
 		List<String> linhas = new ArrayList<>();
 	    boolean encontrado = false;
 
-	    try (BufferedReader reader = new BufferedReader(new FileReader("TituloDivida.txt"))) {
+	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
 	        String line;
 	        while ((line = reader.readLine()) != null) {
 	            String[] frases = line.split(";");
@@ -80,7 +82,7 @@ public class RepositorioTituloDivida {
 	        return false;
 	    }
 
-	    try (BufferedWriter writer = new BufferedWriter(new FileWriter("TituloDivida.txt"))) {
+	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
 	        for (String linha : linhas) {
 	            writer.write(linha);
 	            writer.newLine();
@@ -97,7 +99,7 @@ public class RepositorioTituloDivida {
 		List<String> linhas = new ArrayList<>();
 	    boolean encontrado = false;
 	    
-	    try (BufferedReader reader = new BufferedReader(new FileReader("TituloDivida.txt"))) {
+	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
 	        String line;
 	        while ((line = reader.readLine()) != null) {
 	            String[] frases = line.split(";");
@@ -118,7 +120,7 @@ public class RepositorioTituloDivida {
             return false;
         }
 
-	    try (BufferedWriter writer = new BufferedWriter(new FileWriter("TituloDivida.txt"))) {
+	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
             for (String linha : linhas) {
                 writer.write(linha);
                 writer.newLine();
@@ -130,7 +132,7 @@ public class RepositorioTituloDivida {
         }
 	}
 	public TituloDivida buscar(int identificador) {
-		try(BufferedReader reader = new BufferedReader(new FileReader("TituloDivida.txt"))){
+		try(BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))){
 			String line;
             while ((line = reader.readLine()) != null) {
                 String[] frases = line.split(";");
@@ -150,7 +152,7 @@ public class RepositorioTituloDivida {
 	}
 
 	private boolean idDuplicado(int identificador) {
-	    try (BufferedReader reader = new BufferedReader(new FileReader("TituloDivida.txt"))) {
+	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
 	        String line;
 	        while ((line = reader.readLine()) != null) {
 	            String[] frases = line.split(";");

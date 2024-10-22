@@ -35,12 +35,14 @@ import br.com.cesarschool.poo.titulos.entidades.Acao;
  * objeto. Caso o identificador não seja encontrado no arquivo, retornar null.   
  */
 public class RepositorioAcao {
+	
+	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/Acao.txt";
 	public boolean incluir(Acao acao) {		
 		if(idExiste(acao.getIdentificador())) {
 			 return false;
 		 }
 		
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter("Acao.txt", true))){
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))){
 			String linha = acao.getIdentificador() + ";" + acao.getNome() + ";" + acao.getDataDeValidade() + ";" + acao.getValorUnitario();
 			writer.write(linha);
 			writer.newLine();
@@ -56,7 +58,7 @@ public class RepositorioAcao {
 	    List<String> linhas = new ArrayList<>();
 	    boolean encontrado = false;
 
-	    try (BufferedReader reader = new BufferedReader(new FileReader("Acao.txt"))) {
+	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
 	        String line;
 	        while ((line = reader.readLine()) != null) {
 	            String[] frases = line.split(";");
@@ -78,7 +80,7 @@ public class RepositorioAcao {
 	        return false;
 	    }
 
-	    try (BufferedWriter writer = new BufferedWriter(new FileWriter("Acao.txt"))) {
+	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
 	        for (String linha : linhas) {
 	            writer.write(linha);
 	            writer.newLine();
@@ -94,7 +96,7 @@ public class RepositorioAcao {
 		List<String> linhas = new ArrayList<>();
 	    boolean encontrado = false;
 	    
-	    try (BufferedReader reader = new BufferedReader(new FileReader("Acao.txt"))) {
+	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
 	        String line;
 	        while ((line = reader.readLine()) != null) {
 	            String[] frases = line.split(";");
@@ -115,7 +117,7 @@ public class RepositorioAcao {
             return false;
         }
 
-	    try (BufferedWriter writer = new BufferedWriter(new FileWriter("Acao.txt"))) {
+	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
             for (String linha : linhas) {
                 writer.write(linha);
                 writer.newLine();
@@ -131,7 +133,7 @@ public class RepositorioAcao {
 	
 	public Acao buscar(int identificador) {
 		
-		try(BufferedReader reader = new BufferedReader(new FileReader("Acao.txt"))){
+		try(BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))){
 			String line;
             while ((line = reader.readLine()) != null) {
                 String[] frases = line.split(";");
@@ -151,7 +153,7 @@ public class RepositorioAcao {
 	}
 	
 	private boolean idExiste(int identificador) {
-	    try (BufferedReader reader = new BufferedReader(new FileReader("Acao.txt"))) {
+	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
 	        String line;
 	        while ((line = reader.readLine()) != null) {
 	            String[] frases = line.split(";");

@@ -67,7 +67,7 @@ public class MediatorEntidadeOperadora {
 	
 	private String validar(EntidadeOperadora entidade) {
 		if(entidade.getIdentificador() < 100 || entidade.getIdentificador() > 1000000) {
-			return "Identificador deve estar entre 1 e 99999.";
+			return "Identificador deve estar entre 100 e 99999.";
 		}
 		
 		if(entidade.getNome() == null || entidade.getNome().trim().isEmpty()) {

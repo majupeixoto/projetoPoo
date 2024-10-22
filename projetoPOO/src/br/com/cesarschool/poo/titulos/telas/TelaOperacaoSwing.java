@@ -5,7 +5,7 @@ import br.com.cesarschool.poo.titulos.mediators.MediatorOperacao;
 import javax.swing.*;
 import java.awt.*;
 
-public class TelaOperacaoSwing extends JFrame {
+public class TelaOperacaoSwing extends JPanel { // Mudou de JFrame para JPanel
 
     private static final long serialVersionUID = 1L;
 
@@ -21,11 +21,6 @@ public class TelaOperacaoSwing extends JFrame {
 
     public TelaOperacaoSwing(MediatorOperacao mediatorOperacao) {
         this.mediatorOperacao = mediatorOperacao;
-
-        setTitle("Operação de Crédito e Débito");
-        setSize(400, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
 
         setLayout(new BorderLayout());
 
@@ -65,7 +60,6 @@ public class TelaOperacaoSwing extends JFrame {
         btnRealizarOperacao.addActionListener(e -> realizarOperacao());
     }
 
-    
     // MÉTODOS
     private void realizarOperacao() {
         try {

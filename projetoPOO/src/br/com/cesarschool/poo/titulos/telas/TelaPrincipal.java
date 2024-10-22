@@ -5,57 +5,65 @@ import br.com.cesarschool.poo.titulos.mediators.MediatorAcao;
 import br.com.cesarschool.poo.titulos.mediators.MediatorOperacao;
 import br.com.cesarschool.poo.titulos.mediators.MediatorTituloDivida;
 
-import javax.swing.JFrame;
-
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+public class TelaPrincipal extends JFrame {
 
-public class TelaPrincipal extends JFrame{
-	
-	private static final long serialVersionUID = 1L;  // Adiciona serialVersionUID
+    private static final long serialVersionUID = 1L;
 
-	private MediatorEntidadeOperadora mediatorEntidadeOperadora;
+    private MediatorEntidadeOperadora mediatorEntidadeOperadora;
     private MediatorAcao mediatorAcao;
     private MediatorOperacao mediatorOperacao;
     private MediatorTituloDivida mediatorTituloDivida;
-    
+
+    private JPanel panelCards; // Painel para o CardLayout
+
     public TelaPrincipal() {
-    	this.mediatorEntidadeOperadora = MediatorEntidadeOperadora.getInstance();
+        this.mediatorEntidadeOperadora = MediatorEntidadeOperadora.getInstance();
         this.mediatorAcao = MediatorAcao.getInstance();
         this.mediatorOperacao = MediatorOperacao.getInstance();
         this.mediatorTituloDivida = MediatorTituloDivida.getInstance();
-        
+
         setTitle("Menu Principal");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1));
-        
+
+        panelCards = new JPanel();
+        panelCards.setLayout(new CardLayout());
+
+        // Painel principal para os botões
+        JPanel panelMenu = new JPanel();
+        panelMenu.setLayout(new GridLayout(5, 1));
+
         JButton btnEntidade = new JButton("Gerenciar Entidades Operadoras");
         JButton btnAcao = new JButton("Gerenciar Ações");
         JButton btnOperacao = new JButton("Gerenciar Operações");
         JButton btnTituloDivida = new JButton("Gerenciar Títulos de Dívida");
         JButton btnSair = new JButton("Sair");
-        
-        panel.add(btnEntidade);
-        panel.add(btnAcao);
-        panel.add(btnOperacao);
-        panel.add(btnTituloDivida);
-        panel.add(btnSair);
-        
-        add(panel);
-        
+
+        panelMenu.add(btnEntidade);
+        panelMenu.add(btnAcao);
+        panelMenu.add(btnOperacao);
+        panelMenu.add(btnTituloDivida);
+        panelMenu.add(btnSair);
+
+        // Adiciona o painel do menu ao painel de cartões
+        panelCards.add(panelMenu, "Menu");
+
+        add(panelCards);
+
         // BOTÕES DAS TELAS
         btnEntidade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TelaEntidadeOperadoraSwing telaEntidade = new TelaEntidadeOperadoraSwing(mediatorEntidadeOperadora);
-                telaEntidade.setVisible(true);
+                panelCards.add(telaEntidade, "Entidade");
+                CardLayout cl = (CardLayout)(panelCards.getLayout());
+                cl.show(panelCards, "Entidade");
             }
         });
 
@@ -63,7 +71,9 @@ public class TelaPrincipal extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 TelaAcaoSwing telaAcao = new TelaAcaoSwing(mediatorAcao);
-                telaAcao.setVisible(true);
+                panelCards.add(telaAcao, "Ação");
+                CardLayout cl = (CardLayout)(panelCards.getLayout());
+                cl.show(panelCards, "Ação");
             }
         });
 
@@ -71,7 +81,9 @@ public class TelaPrincipal extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 TelaOperacaoSwing telaOperacao = new TelaOperacaoSwing(mediatorOperacao);
-                telaOperacao.setVisible(true);
+                panelCards.add(telaOperacao, "Operação");
+                CardLayout cl = (CardLayout)(panelCards.getLayout());
+                cl.show(panelCards, "Operação");
             }
         });
 
@@ -79,7 +91,9 @@ public class TelaPrincipal extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 TelaTituloDividaSwing telaTituloDivida = new TelaTituloDividaSwing(mediatorTituloDivida);
-                telaTituloDivida.setVisible(true);
+                panelCards.add(telaTituloDivida, "Título de Dívida");
+                CardLayout cl = (CardLayout)(panelCards.getLayout());
+                cl.show(panelCards, "Título de Dívida");
             }
         });
 
@@ -91,9 +105,11 @@ public class TelaPrincipal extends JFrame{
             }
         });
     }
-    
+
     public static void main(String[] args) {
-        TelaPrincipal telaPrincipal = new TelaPrincipal();
-        telaPrincipal.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            TelaPrincipal telaPrincipal = new TelaPrincipal();
+            telaPrincipal.setVisible(true);
+        });
     }
 }

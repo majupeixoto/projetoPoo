@@ -33,10 +33,10 @@ import br.com.cesarschool.poo.titulos.entidades.Transacao;
  */
 public class RepositorioTransacao {
 	
-	private static final String FILE_NAME = "Transacao.txt";
+	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/TituloDivida.txt";
 	
 	public void incluir(Transacao transacao) {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))) {
             String linha = formatarTransacaoParaLinha(transacao);
             writer.write(linha);
             writer.newLine();
@@ -47,7 +47,7 @@ public class RepositorioTransacao {
 
 	public Transacao[] buscarPorEntidadeCredora(long identificadorEntidadeCredito) {
 		List<Transacao> transacoesEncontradas = new ArrayList<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
 			String linha;
 			while ((linha = reader.readLine()) != null) {
 				Transacao transacao = linhaParaTransacao(linha);

@@ -6,7 +6,7 @@ import br.com.cesarschool.poo.titulos.mediators.MediatorEntidadeOperadora;
 import javax.swing.*;
 import java.awt.*;
 
-public class TelaEntidadeOperadoraSwing extends JFrame {
+public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para JPanel
     private static final long serialVersionUID = 1L;
 
     private MediatorEntidadeOperadora mediatorEntidadeOperadora;
@@ -20,12 +20,7 @@ public class TelaEntidadeOperadoraSwing extends JFrame {
     public TelaEntidadeOperadoraSwing(MediatorEntidadeOperadora mediatorEntidadeOperadora) {
         this.mediatorEntidadeOperadora = mediatorEntidadeOperadora;
 
-        setTitle("Gerenciamento de Entidades Operadoras");
-        setSize(400, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
-        
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout()); // Usar BorderLayout diretamente
 
         JPanel panel = new JPanel(new GridLayout(6, 2));
         panel.add(new JLabel("Identificador:"));
@@ -54,11 +49,11 @@ public class TelaEntidadeOperadoraSwing extends JFrame {
         txtStatus = new JTextArea();
         txtStatus.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(txtStatus);
-        
+
         add(panel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
         add(new JLabel("Status:"), BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.EAST); // Alterado para adicionar a área de status no lado direito
+        add(scrollPane, BorderLayout.EAST); // Área de status à direita
 
         // Ação dos botões
         btnIncluir.addActionListener(e -> incluirEntidadeOperadora());
@@ -67,8 +62,6 @@ public class TelaEntidadeOperadoraSwing extends JFrame {
         btnBuscar.addActionListener(e -> buscarEntidadeOperadora());
     }
 
-    
-    
     // MÉTODOS
     private void incluirEntidadeOperadora() {
         try {
@@ -103,7 +96,7 @@ public class TelaEntidadeOperadoraSwing extends JFrame {
     private void excluirEntidadeOperadora() {
         try {
             long identificador = Long.parseLong(txtIdentificador.getText());
-            String resultado = mediatorEntidadeOperadora.excluir((int)identificador);
+            String resultado = mediatorEntidadeOperadora.excluir((int) identificador);
 
             txtStatus.setText(resultado != null ? resultado : "Entidade operadora excluída com sucesso.");
         } catch (Exception ex) {
@@ -114,7 +107,7 @@ public class TelaEntidadeOperadoraSwing extends JFrame {
     private void buscarEntidadeOperadora() {
         try {
             long identificador = Long.parseLong(txtIdentificador.getText());
-            EntidadeOperadora entidade = mediatorEntidadeOperadora.buscar((int)identificador);
+            EntidadeOperadora entidade = mediatorEntidadeOperadora.buscar((int) identificador);
 
             if (entidade != null) {
                 txtNome.setText(entidade.getNome());
