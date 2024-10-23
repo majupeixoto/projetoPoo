@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.cesarschool.poo.titulos.entidades.Acao;
 import br.com.cesarschool.poo.titulos.entidades.TituloDivida;
 
 /*
@@ -40,19 +39,20 @@ public class RepositorioTituloDivida {
 	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/TituloDivida.txt";
 
 	public boolean incluir(TituloDivida tituloDivida) {
-		if(idDuplicado(tituloDivida.getIdentificador())) {
-			 return false;
-		 }
+	    if (idDuplicado(tituloDivida.getIdentificador())) {
+	        return false;
+	    }
 
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))){
-			String linha = tituloDivida.getIdentificador() + ";" + tituloDivida.getNome() + ";" + tituloDivida.getDataDeValidade() + ";" + tituloDivida.getTaxaJuros();
-			writer.write(linha);
-			writer.newLine();
-			return true;
-		} catch(IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))) {
+	        String linha = tituloDivida.getIdentificador() + ";" + tituloDivida.getNome() + ";" 
+	                     + tituloDivida.getDataDeValidade() + ";" + tituloDivida.getTaxaJuros();
+	        writer.write(linha);
+	        writer.newLine(); // Adiciona a quebra de linha
+	        return true;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 	
 

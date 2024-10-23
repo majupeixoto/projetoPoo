@@ -77,12 +77,8 @@ public class TelaTituloDividaSwing extends JPanel { // Mudou de JFrame para JPan
 
 			TituloDivida tituloDivida = new TituloDivida(identificador, nome, dataDeValidade, taxaJuros);
 			String resultado = mediatorTituloDivida.incluir(tituloDivida);
-
-			if (resultado == null) {
-				txtStatus.setText("Título incluído com sucesso.");
-			} else {
-				txtStatus.setText(resultado);
-			}
+			
+			txtStatus.setText(resultado == null ? "Título incluído com sucesso." : resultado);
 		} catch (Exception ex) {
 			txtStatus.setText("Erro ao incluir título: " + ex.getMessage());
 		}

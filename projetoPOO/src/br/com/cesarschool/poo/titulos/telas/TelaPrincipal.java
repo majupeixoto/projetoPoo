@@ -20,6 +20,7 @@ public class TelaPrincipal extends JFrame {
     private MediatorTituloDivida mediatorTituloDivida;
 
     private JPanel panelCards; // Painel para o CardLayout
+    private CardLayout cardLayout;
 
     public TelaPrincipal() {
         this.mediatorEntidadeOperadora = MediatorEntidadeOperadora.getInstance();
@@ -28,16 +29,17 @@ public class TelaPrincipal extends JFrame {
         this.mediatorTituloDivida = MediatorTituloDivida.getInstance();
 
         setTitle("Menu Principal");
-        setSize(400, 300);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        panelCards = new JPanel();
-        panelCards.setLayout(new CardLayout());
+        // Painel para o CardLayout
+        cardLayout = new CardLayout();
+        panelCards = new JPanel(cardLayout);
 
-        // Painel principal para os botões
-        JPanel panelMenu = new JPanel();
-        panelMenu.setLayout(new GridLayout(5, 1));
+        // Adicionando o menu à esquerda com JSplitPane
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new GridLayout(5, 1));
 
         JButton btnEntidade = new JButton("Gerenciar Entidades Operadoras");
         JButton btnAcao = new JButton("Gerenciar Ações");
@@ -45,63 +47,59 @@ public class TelaPrincipal extends JFrame {
         JButton btnTituloDivida = new JButton("Gerenciar Títulos de Dívida");
         JButton btnSair = new JButton("Sair");
 
-        panelMenu.add(btnEntidade);
-        panelMenu.add(btnAcao);
-        panelMenu.add(btnOperacao);
-        panelMenu.add(btnTituloDivida);
-        panelMenu.add(btnSair);
+        menuPanel.add(btnEntidade);
+        menuPanel.add(btnAcao);
+        menuPanel.add(btnOperacao);
+        menuPanel.add(btnTituloDivida);
+        menuPanel.add(btnSair);
 
-        // Adiciona o painel do menu ao painel de cartões
-        panelCards.add(panelMenu, "Menu");
+        // Adicionando as telas ao CardLayout
+        panelCards.add(new JPanel(), "Menu");  // Tela inicial
+        panelCards.add(new TelaEntidadeOperadoraSwing(mediatorEntidadeOperadora), "Entidade");
+        panelCards.add(new TelaAcaoSwing(mediatorAcao), "Ação");
+        panelCards.add(new TelaOperacaoSwing(mediatorOperacao), "Operação");
+        panelCards.add(new TelaTituloDividaSwing(mediatorTituloDivida), "Título de Dívida");
 
-        add(panelCards);
+        // Dividindo a janela em menu à esquerda e conteúdo à direita
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPanel, panelCards);
+        splitPane.setDividerLocation(200);  // Define a largura do painel de menu
 
-        // BOTÕES DAS TELAS
+        // Adicionando o JSplitPane à janela principal
+        getContentPane().add(splitPane);
+
+        // Ações dos botões para alternar entre as telas
         btnEntidade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TelaEntidadeOperadoraSwing telaEntidade = new TelaEntidadeOperadoraSwing(mediatorEntidadeOperadora);
-                panelCards.add(telaEntidade, "Entidade");
-                CardLayout cl = (CardLayout)(panelCards.getLayout());
-                cl.show(panelCards, "Entidade");
+                cardLayout.show(panelCards, "Entidade");
             }
         });
 
         btnAcao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TelaAcaoSwing telaAcao = new TelaAcaoSwing(mediatorAcao);
-                panelCards.add(telaAcao, "Ação");
-                CardLayout cl = (CardLayout)(panelCards.getLayout());
-                cl.show(panelCards, "Ação");
+                cardLayout.show(panelCards, "Ação");
             }
         });
 
         btnOperacao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TelaOperacaoSwing telaOperacao = new TelaOperacaoSwing(mediatorOperacao);
-                panelCards.add(telaOperacao, "Operação");
-                CardLayout cl = (CardLayout)(panelCards.getLayout());
-                cl.show(panelCards, "Operação");
+                cardLayout.show(panelCards, "Operação");
             }
         });
 
         btnTituloDivida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TelaTituloDividaSwing telaTituloDivida = new TelaTituloDividaSwing(mediatorTituloDivida);
-                panelCards.add(telaTituloDivida, "Título de Dívida");
-                CardLayout cl = (CardLayout)(panelCards.getLayout());
-                cl.show(panelCards, "Título de Dívida");
+                cardLayout.show(panelCards, "Título de Dívida");
             }
         });
 
-        // Botão Sair para fechar o programa
         btnSair.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose(); // Fecha a janela principal
+                dispose();  // Fecha a aplicação
             }
         });
     }
