@@ -10,40 +10,21 @@ import java.util.List;
 
 import br.com.cesarschool.poo.titulos.entidades.EntidadeOperadora;
 
-/*
- * Deve gravar em e ler de um arquivo texto chamado Acao.txt os dados dos objetos do tipo
- * Acao. Seguem abaixo exemplos de linhas.
- *
-    1;PETROBRAS;2024-12-12;30.33
-    2;BANCO DO BRASIL;2026-01-01;21.21
-    3;CORREIOS;2027-11-11;6.12 
- * 
- * A inclusão deve adicionar uma nova linha ao arquivo. Não é permitido incluir 
- * identificador repetido. Neste caso, o método deve retornar false. Inclusão com 
- * sucesso, retorno true.
- * 
- * A alteração deve substituir a linha atual por uma nova linha. A linha deve ser 
- * localizada por identificador que, quando não encontrado, enseja retorno false. 
- * Alteração com sucesso, retorno true.  
- *   
- * A exclusão deve apagar a linha atual do arquivo. A linha deve ser 
- * localizada por identificador que, quando não encontrado, enseja retorno false. 
- * Exclusão com sucesso, retorno true.
- * 
- * A busca deve localizar uma linha por identificador, materializar e retornar um 
- * objeto. Caso o identificador não seja encontrado no arquivo, retornar null.   
- */
 public class RepositorioEntidadeOperadora {
-	
-	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/EntidadeOperadora.txt";
+    
+    private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/EntidadeOperadora.txt";
 
-	public boolean incluir(EntidadeOperadora entidadeOperadora) {
+    public boolean incluir(EntidadeOperadora entidadeOperadora) {
         if (idDuplicado(entidadeOperadora.getIdentificador())) {
             return false;
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))) {
-            String linha = entidadeOperadora.getIdentificador() + ";" + entidadeOperadora.getNome() + ";" + entidadeOperadora.getAutorizadoAcao();
+            String linha = entidadeOperadora.getIdentificador() + ";" +
+                           entidadeOperadora.getNome() + ";" +
+                           entidadeOperadora.getAutorizadoAcao() + ";" +
+                           entidadeOperadora.getSaldoAcao() + ";" +
+                           entidadeOperadora.getSaldoTituloDivida();
             writer.write(linha);
             writer.newLine();
             return true;
@@ -64,7 +45,11 @@ public class RepositorioEntidadeOperadora {
                 long idPresente = Long.parseLong(dados[0]);
 
                 if (idPresente == entidadeOperadora.getIdentificador()) {
-                    linhas.add(entidadeOperadora.getIdentificador() + ";" + entidadeOperadora.getNome() + ";" + entidadeOperadora.getAutorizadoAcao());
+                    linhas.add(entidadeOperadora.getIdentificador() + ";" +
+                               entidadeOperadora.getNome() + ";" +
+                               entidadeOperadora.getAutorizadoAcao() + ";" +
+                               entidadeOperadora.getSaldoAcao() + ";" +
+                               entidadeOperadora.getSaldoTituloDivida());
                     encontrado = true;
                 } else {
                     linhas.add(line);
@@ -138,7 +123,9 @@ public class RepositorioEntidadeOperadora {
                 if (idPresente == identificador) {
                     String nome = dados[1];
                     boolean autorizadoAcao = Boolean.parseBoolean(dados[2]);
-                    return new EntidadeOperadora(idPresente, nome, autorizadoAcao, 0.0, 0.0);
+                    double saldoAcao = Double.parseDouble(dados[3]);
+                    double saldoTituloDivida = Double.parseDouble(dados[4]);
+                    return new EntidadeOperadora(idPresente, nome, autorizadoAcao, saldoAcao, saldoTituloDivida);
                 }
             }
         } catch (IOException e) {

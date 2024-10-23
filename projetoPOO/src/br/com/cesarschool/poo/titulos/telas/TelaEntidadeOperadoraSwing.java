@@ -6,7 +6,7 @@ import br.com.cesarschool.poo.titulos.mediators.MediatorEntidadeOperadora;
 import javax.swing.*;
 import java.awt.*;
 
-public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para JPanel
+public class TelaEntidadeOperadoraSwing extends JPanel {
     private static final long serialVersionUID = 1L;
 
     private MediatorEntidadeOperadora mediatorEntidadeOperadora;
@@ -20,7 +20,7 @@ public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para
     public TelaEntidadeOperadoraSwing(MediatorEntidadeOperadora mediatorEntidadeOperadora) {
         this.mediatorEntidadeOperadora = mediatorEntidadeOperadora;
 
-        setLayout(new BorderLayout()); // Usar BorderLayout diretamente
+        setLayout(new BorderLayout());
 
         JPanel panel = new JPanel(new GridLayout(6, 2));
         panel.add(new JLabel("Identificador:"));
@@ -73,6 +73,8 @@ public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para
             String resultado = mediatorEntidadeOperadora.incluir(entidade);
 
             txtStatus.setText(resultado != null ? resultado : "Entidade operadora incluída com sucesso.");
+        } catch (NumberFormatException ex) {
+            txtStatus.setText("Erro: Identificador deve ser um número válido.");
         } catch (Exception ex) {
             txtStatus.setText("Erro ao incluir entidade: " + ex.getMessage());
         }
@@ -88,6 +90,8 @@ public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para
             String resultado = mediatorEntidadeOperadora.alterar(entidade);
 
             txtStatus.setText(resultado != null ? resultado : "Entidade operadora alterada com sucesso.");
+        } catch (NumberFormatException ex) {
+            txtStatus.setText("Erro: Identificador deve ser um número válido.");
         } catch (Exception ex) {
             txtStatus.setText("Erro ao alterar entidade: " + ex.getMessage());
         }
@@ -96,9 +100,11 @@ public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para
     private void excluirEntidadeOperadora() {
         try {
             long identificador = Long.parseLong(txtIdentificador.getText());
-            String resultado = mediatorEntidadeOperadora.excluir((int) identificador);
+            String resultado = mediatorEntidadeOperadora.excluir(identificador); // Passando long diretamente
 
             txtStatus.setText(resultado != null ? resultado : "Entidade operadora excluída com sucesso.");
+        } catch (NumberFormatException ex) {
+            txtStatus.setText("Erro: Identificador deve ser um número válido.");
         } catch (Exception ex) {
             txtStatus.setText("Erro ao excluir entidade: " + ex.getMessage());
         }
@@ -107,7 +113,7 @@ public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para
     private void buscarEntidadeOperadora() {
         try {
             long identificador = Long.parseLong(txtIdentificador.getText());
-            EntidadeOperadora entidade = mediatorEntidadeOperadora.buscar((int) identificador);
+            EntidadeOperadora entidade = mediatorEntidadeOperadora.buscar(identificador); // Passando long diretamente
 
             if (entidade != null) {
                 txtNome.setText(entidade.getNome());
@@ -116,6 +122,8 @@ public class TelaEntidadeOperadoraSwing extends JPanel { // Mudou de JFrame para
             } else {
                 txtStatus.setText("Entidade operadora não encontrada.");
             }
+        } catch (NumberFormatException ex) {
+            txtStatus.setText("Erro: Identificador deve ser um número válido.");
         } catch (Exception ex) {
             txtStatus.setText("Erro ao buscar entidade: " + ex.getMessage());
         }

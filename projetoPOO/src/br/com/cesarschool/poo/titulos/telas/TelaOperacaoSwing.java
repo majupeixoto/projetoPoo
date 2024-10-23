@@ -63,6 +63,7 @@ public class TelaOperacaoSwing extends JPanel { // Mudou de JFrame para JPanel
     // MÉTODOS
     private void realizarOperacao() {
         try {
+            // Coleta os dados
             int entidadeCredito = Integer.parseInt(txtEntidadeCredito.getText());
             int entidadeDebito = Integer.parseInt(txtEntidadeDebito.getText());
             int idAcaoOuTitulo = Integer.parseInt(txtIdAcaoOuTitulo.getText());
@@ -71,7 +72,23 @@ public class TelaOperacaoSwing extends JPanel { // Mudou de JFrame para JPanel
 
             // Chama o método de realização de operação no MediatorOperacao
             String resultado = mediatorOperacao.realizarOperacao(ehAcao, entidadeCredito, entidadeDebito, idAcaoOuTitulo, valor);
-            txtStatus.setText(resultado);
+
+            // Supondo que o resultado é uma String contendo todos os dados que você quer formatar
+            String[] dados = resultado.split(";"); // Divide os dados usando o delimitador
+
+            // Formata a saída
+            StringBuilder saida = new StringBuilder();
+            for (String dado : dados) {
+                // Aqui você pode adicionar formatação específica para cada dado se necessário
+                saida.append(dado).append(";");
+            }
+
+            // Remove o último ponto e vírgula
+            if (saida.length() > 0) {
+                saida.setLength(saida.length() - 1);
+            }
+
+            txtStatus.setText(saida.toString()); // Atualiza o status com a saída formatada
         } catch (NumberFormatException ex) {
             txtStatus.setText("Erro: Verifique se todos os campos estão preenchidos corretamente.");
         } catch (Exception ex) {
