@@ -69,7 +69,7 @@ public class TelaEntidadeOperadoraSwing extends JPanel {
             String nome = txtNome.getText();
             boolean autorizadoAcao = Boolean.parseBoolean(txtAutorizadoAcao.getText());
 
-            EntidadeOperadora entidade = new EntidadeOperadora(identificador, nome, autorizadoAcao, 0.0, 0.0);
+            EntidadeOperadora entidade = new EntidadeOperadora(identificador, nome, autorizadoAcao);
             String resultado = mediatorEntidadeOperadora.incluir(entidade);
 
             txtStatus.setText(resultado != null ? resultado : "Entidade operadora incluída com sucesso.");
@@ -86,7 +86,7 @@ public class TelaEntidadeOperadoraSwing extends JPanel {
             String nome = txtNome.getText();
             boolean autorizadoAcao = Boolean.parseBoolean(txtAutorizadoAcao.getText());
 
-            EntidadeOperadora entidade = new EntidadeOperadora(identificador, nome, autorizadoAcao, 0.0, 0.0);
+            EntidadeOperadora entidade = new EntidadeOperadora(identificador, nome, autorizadoAcao);
             String resultado = mediatorEntidadeOperadora.alterar(entidade);
 
             txtStatus.setText(resultado != null ? resultado : "Entidade operadora alterada com sucesso.");

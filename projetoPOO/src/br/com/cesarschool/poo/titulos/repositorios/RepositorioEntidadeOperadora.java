@@ -78,7 +78,7 @@ public class RepositorioEntidadeOperadora {
 
     public boolean excluir(long identificador) {
         List<String> linhas = new ArrayList<>();
-        boolean encontrado = false;
+        boolean deletado = false;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
             String line;
@@ -89,7 +89,7 @@ public class RepositorioEntidadeOperadora {
                 if (idPresente != identificador) {
                     linhas.add(line);
                 } else {
-                    encontrado = true;
+                    deletado = true;
                 }
             }
         } catch (IOException e) {
@@ -97,7 +97,7 @@ public class RepositorioEntidadeOperadora {
             return false;
         }
 
-        if (!encontrado) {
+        if (!deletado) {
             return false;
         }
 
@@ -121,11 +121,14 @@ public class RepositorioEntidadeOperadora {
                 long idPresente = Long.parseLong(dados[0]);
 
                 if (idPresente == identificador) {
-                    String nome = dados[1];
-                    boolean autorizadoAcao = Boolean.parseBoolean(dados[2]);
-                    double saldoAcao = Double.parseDouble(dados[3]);
-                    double saldoTituloDivida = Double.parseDouble(dados[4]);
-                    return new EntidadeOperadora(idPresente, nome, autorizadoAcao, saldoAcao, saldoTituloDivida);
+                	EntidadeOperadora entidadeOperadora = new EntidadeOperadora(
+                            identificador,
+                            dados[1],
+                            Boolean.parseBoolean(dados[2])
+                    );
+                    entidadeOperadora.creditarSaldoAcao(Double.parseDouble(dados[3]));
+                    entidadeOperadora.creditarSaldoTituloDivida(Double.parseDouble(dados[4]));
+                    return entidadeOperadora;
                 }
             }
         } catch (IOException e) {

@@ -5,7 +5,7 @@ import br.com.cesarschool.poo.titulos.mediators.MediatorOperacao;
 import javax.swing.*;
 import java.awt.*;
 
-public class TelaOperacaoSwing extends JPanel { // Mudou de JFrame para JPanel
+public class TelaOperacaoSwing extends JPanel {
 
     private static final long serialVersionUID = 1L;
 

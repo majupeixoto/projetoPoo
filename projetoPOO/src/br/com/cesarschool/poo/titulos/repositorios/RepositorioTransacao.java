@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,117 +17,140 @@ import br.com.cesarschool.poo.titulos.entidades.TituloDivida;
 import br.com.cesarschool.poo.titulos.entidades.Transacao;
 
 public class RepositorioTransacao {
-	
-	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/transacao.txt"; // Corrigido o caminho do arquivo
 
-	public void incluir(Transacao transacao) {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))) {
+    private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/transacao.txt";
+    private static final String NULL_VALUE = "null";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public void incluir(Transacao transacao) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))) {
             String linha = formatarTransacaoParaLinha(transacao);
             writer.write(linha);
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
-	}
+    }
 
-	public Transacao[] buscarPorEntidadeCredora(long identificadorEntidadeCredito) {
-		List<Transacao> transacoesEncontradas = new ArrayList<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
-			String linha;
-			while ((linha = reader.readLine()) != null) {
-				Transacao transacao = linhaParaTransacao(linha);
-				if (transacao.getEntidadeCredito().getIdentificador() == identificadorEntidadeCredito) {
-					transacoesEncontradas.add(transacao);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return transacoesEncontradas.toArray(new Transacao[0]);
-	}
-	
-	private Transacao linhaParaTransacao(String linha) {
-		String[] dados = linha.split(";");
+    public Transacao[] buscarPorEntidadeDevedora(long identificadorEntidadeDevedora) {
+        List<Transacao> transacoesEncontradas = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                Transacao transacao = linhaParaTransacao(linha);
+                if (transacao != null && transacao.getEntidadeDebito().getIdentificador() == identificadorEntidadeDevedora) {
+                    transacoesEncontradas.add(transacao);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return transacoesEncontradas.toArray(new Transacao[0]);
+    }
 
-		long idCredito = Long.parseLong(dados[0]);
-		String nomeCredito = dados[1];
-		boolean autorizadoCredito = Boolean.parseBoolean(dados[2]);
-		double saldoAcaoCredito = Double.parseDouble(dados[3]);
-		double saldoTituloDividaCredito = Double.parseDouble(dados[4]);
+    public Transacao[] buscarPorEntidadeCredora(long identificadorEntidadeCredito) {
+        List<Transacao> transacoesEncontradas = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                Transacao transacao = linhaParaTransacao(linha);
+                if (transacao != null && transacao.getEntidadeCredito().getIdentificador() == identificadorEntidadeCredito) {
+                    transacoesEncontradas.add(transacao);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return transacoesEncontradas.toArray(new Transacao[0]);
+    }
 
-		EntidadeOperadora entidadeCredito = new EntidadeOperadora(idCredito, nomeCredito, autorizadoCredito, saldoAcaoCredito, saldoTituloDividaCredito);
+    private Transacao linhaParaTransacao(String linha) {
+        String[] dados = linha.split(";");
+        
+        EntidadeOperadora entidadeCredito = parseEntidade(dados, 0);
+        EntidadeOperadora entidadeDebito = parseEntidade(dados, 5);
 
-		long idDebito = Long.parseLong(dados[5]);
-		String nomeDebito = dados[6];
-		boolean autorizadoDebito = Boolean.parseBoolean(dados[7]);
-		double saldoAcaoDebito = Double.parseDouble(dados[8]);
-		double saldoTituloDividaDebito = Double.parseDouble(dados[9]);
+        Acao acao = parseAcao(dados, 10);
+        TituloDivida tituloDivida = parseTituloDivida(dados, 14);
 
-		EntidadeOperadora entidadeDebito = new EntidadeOperadora(idDebito, nomeDebito, autorizadoDebito, saldoAcaoDebito, saldoTituloDividaDebito);
-		
-		Acao acao = null;
-		if (!"null".equals(dados[10])) {
-			int idAcao = Integer.parseInt(dados[10]);
-			String nomeAcao = dados[11];
-			LocalDate dataValidadeAcao = LocalDate.parse(dados[12]);
-			double valorUnitarioAcao = Double.parseDouble(dados[13]);
-			acao = new Acao(idAcao, nomeAcao, dataValidadeAcao, valorUnitarioAcao);
-		}
+        double valorOperacao = Double.parseDouble(dados[18]);
+        LocalDateTime dataHoraOperacao = LocalDateTime.parse(dados[19].replace(" ", "T"), DATE_TIME_FORMATTER);
 
-		TituloDivida tituloDivida = null;
-		if (!"null".equals(dados[14])) {
-			int idTituloDivida = Integer.parseInt(dados[14]);
-			String nomeTituloDivida = dados[15];
-			LocalDate dataValidadeTituloDivida = LocalDate.parse(dados[16]);
-			double taxaJurosTituloDivida = Double.parseDouble(dados[17]);
-			tituloDivida = new TituloDivida(idTituloDivida, nomeTituloDivida, dataValidadeTituloDivida, taxaJurosTituloDivida);
-		}
+        return new Transacao(entidadeCredito, entidadeDebito, acao, tituloDivida, valorOperacao, dataHoraOperacao);
+    }
 
-		double valorOperacao = Double.parseDouble(dados[18]);
-		LocalDateTime dataHoraOperacao = LocalDateTime.parse(dados[19].replace(" ", "T"));
+    private EntidadeOperadora parseEntidade(String[] dados, int startIndex) {
+        long id = Long.parseLong(dados[startIndex]);
+        String nome = dados[startIndex + 1];
+        boolean autorizado = Boolean.parseBoolean(dados[startIndex + 2]);
+        
+        EntidadeOperadora entidadeOperadora = new EntidadeOperadora(
+        		id,
+        		nome,
+        		autorizado
+        );
+        entidadeOperadora.creditarSaldoAcao(Double.parseDouble(dados[startIndex + 3]));
+        entidadeOperadora.creditarSaldoTituloDivida(Double.parseDouble(dados[startIndex + 4]));
+        return entidadeOperadora;
+    }
 
-		return new Transacao(entidadeCredito, entidadeDebito, acao, tituloDivida, valorOperacao, dataHoraOperacao);
-	}
-	
-	private String formatarTransacaoParaLinha(Transacao transacao) {
-	    // Entidade Credito
-	    String linha = transacao.getEntidadeCredito().getIdentificador() + ";" +
-	                   transacao.getEntidadeCredito().getNome() + ";" +
-	                   transacao.getEntidadeCredito().getAutorizadoAcao() + ";" +
-	                   transacao.getEntidadeCredito().getSaldoAcao() + ";" +
-	                   transacao.getEntidadeCredito().getSaldoTituloDivida() + ";" ;
+    private Acao parseAcao(String[] dados, int startIndex) {
+        if (NULL_VALUE.equals(dados[startIndex])) {
+            return null;
+        }
+        int id = Integer.parseInt(dados[startIndex]);
+        String nome = dados[startIndex + 1];
+        LocalDate dataValidade = LocalDate.parse(dados[startIndex + 2], DATE_FORMATTER);
+        double valorUnitario = Double.parseDouble(dados[startIndex + 3]);
+        return new Acao(id, nome, dataValidade, valorUnitario);
+    }
 
-	    // Entidade Debito
-	    linha += transacao.getEntidadeDebito().getIdentificador() + ";" +
-	             transacao.getEntidadeDebito().getNome() + ";" +
-	             transacao.getEntidadeDebito().getAutorizadoAcao() + ";" +
-	             transacao.getEntidadeDebito().getSaldoAcao() + ";" +
-	             transacao.getEntidadeDebito().getSaldoTituloDivida() + ";" ;
+    private TituloDivida parseTituloDivida(String[] dados, int startIndex) {
+        if (NULL_VALUE.equals(dados[startIndex])) {
+            return null;
+        }
+        int id = Integer.parseInt(dados[startIndex]);
+        String nome = dados[startIndex + 1];
+        LocalDate dataValidade = LocalDate.parse(dados[startIndex + 2], DATE_FORMATTER);
+        double taxaJuros = Double.parseDouble(dados[startIndex + 3]);
+        return new TituloDivida(id, nome, dataValidade, taxaJuros);
+    }
 
-	    // Acao
-	    if (transacao.getAcao() != null) {
-	        linha += transacao.getAcao().getIdentificador() + ";" +
-	                 transacao.getAcao().getNome() + ";" +
-	                 transacao.getAcao().getDataDeValidade() + ";" +
-	                 transacao.getAcao().getValorUnitario() + ";";
-	    } else {
-	        linha += "null;null;null;null;";
-	    }
+    private String formatarEntidadeParaLinha(EntidadeOperadora entidade) {
+        return entidade.getIdentificador() + ";" +
+               entidade.getNome() + ";" +
+               entidade.getAutorizadoAcao() + ";" +
+               entidade.getSaldoAcao() + ";" +
+               entidade.getSaldoTituloDivida() + ";";
+    }
 
-	    // TituloDivida
-	    if (transacao.getTituloDivida() != null) {
-	        linha += transacao.getTituloDivida().getIdentificador() + ";" +
-	                 transacao.getTituloDivida().getNome() + ";" +
-	                 transacao.getTituloDivida().getDataDeValidade() + ";" +
-	                 transacao.getTituloDivida().getTaxaJuros() + ";";
-	    } else {
-	        linha += "null;null;null;null;";
-	    }
+    private String formatarAcaoParaLinha(Acao acao) {
+        if (acao != null) {
+            return acao.getIdentificador() + ";" +
+                   acao.getNome() + ";" +
+                   DATE_FORMATTER.format(acao.getDataDeValidade()) + ";" +
+                   acao.getValorUnitario() + ";";
+        }
+        return NULL_VALUE + ";";
+    }
 
-	    // dataHoraOperacao e valorOperacao
-	    linha += transacao.getValorOperacao() + ";" +
-	             transacao.getDataHoraOperacao().toString().replace("T", " ");
+    private String formatarTituloDividaParaLinha(TituloDivida titulo) {
+        if (titulo != null) {
+            return titulo.getIdentificador() + ";" +
+                   titulo.getNome() + ";" +
+                   DATE_FORMATTER.format(titulo.getDataDeValidade()) + ";" +
+                   titulo.getTaxaJuros() + ";";
+        }
+        return NULL_VALUE + ";";
+    }
 
-	    return linha;
-	}
+    private String formatarTransacaoParaLinha(Transacao transacao) {
+        return formatarEntidadeParaLinha(transacao.getEntidadeCredito()) +
+               formatarEntidadeParaLinha(transacao.getEntidadeDebito()) +
+               formatarAcaoParaLinha(transacao.getAcao()) +
+               formatarTituloDividaParaLinha(transacao.getTituloDivida()) +
+               transacao.getValorOperacao() + ";" +
+               DATE_TIME_FORMATTER.format(transacao.getDataHoraOperacao()).replace("T", " ");
+    }
 }

@@ -36,26 +36,27 @@ public class Transacao {
 	}
 	
 	public EntidadeOperadora getEntidadeCredito() {
-		return entidadeCredito;
-	}
-	
-	public EntidadeOperadora getEntidadeDebito() {
-		return entidadeDebito;
-	}
-	
-	public Acao getAcao() {
-		return acao;
-	}
-	
-	public TituloDivida getTituloDivida() {
-		return tituloDivida;
-	}
-	
-	public double getValorOperacao() {
-		return valorOperacao;
-	}
-	
-	public LocalDateTime getDataHoraOperacao() {
-		return dataHoraOperacao;
-	}
+        return entidadeCredito;
+    }
+
+    public EntidadeOperadora getEntidadeDebito() {
+        return entidadeDebito;
+    }
+
+    public Acao getAcao() {
+        return acao;
+    }
+
+    public TituloDivida getTituloDivida() {
+        return tituloDivida;
+    }
+
+    public double getValorOperacao() {
+        return valorOperacao;
+    }
+
+
+    public LocalDateTime getDataHoraOperacao() {
+        return dataHoraOperacao;
+    }
 }
