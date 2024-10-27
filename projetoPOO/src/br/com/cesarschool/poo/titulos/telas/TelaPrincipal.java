@@ -19,8 +19,9 @@ public class TelaPrincipal extends JFrame {
     private MediatorOperacao mediatorOperacao;
     private MediatorTituloDivida mediatorTituloDivida;
 
-    private JPanel panelCards; // Painel para o CardLayout
     private CardLayout cardLayout;
+    private JPanel panelCards;
+    private JPanel menuPanel;
 
     public TelaPrincipal() {
         this.mediatorEntidadeOperadora = MediatorEntidadeOperadora.getInstance();
@@ -33,13 +34,13 @@ public class TelaPrincipal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Painel para o CardLayout
+        // Configuração do CardLayout para alternar entre menu e telas
         cardLayout = new CardLayout();
         panelCards = new JPanel(cardLayout);
 
-        // Adicionando o menu à esquerda com JSplitPane
-        JPanel menuPanel = new JPanel();
-        menuPanel.setLayout(new GridLayout(5, 1));
+        // Painel de Menu Centralizado
+        menuPanel = new JPanel();
+        menuPanel.setLayout(new GridLayout(5, 1, 10, 10));
 
         JButton btnEntidade = new JButton("Gerenciar Entidades Operadoras");
         JButton btnAcao = new JButton("Gerenciar Ações");
@@ -53,24 +54,23 @@ public class TelaPrincipal extends JFrame {
         menuPanel.add(btnTituloDivida);
         menuPanel.add(btnSair);
 
-        // Adicionando as telas ao CardLayout
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(menuPanel, BorderLayout.WEST); // Menu na lateral esquerda
+
+        // Adicionando telas ao CardLayout (panelCards)
         panelCards.add(new JPanel(), "Menu");  // Tela inicial
-        panelCards.add(new TelaEntidadeOperadoraSwing(mediatorEntidadeOperadora), "Entidade");
-        panelCards.add(new TelaAcaoSwing(mediatorAcao), "Ação");
-        panelCards.add(new TelaOperacaoSwing(mediatorOperacao), "Operação");
-        panelCards.add(new TelaTituloDividaSwing(mediatorTituloDivida), "Título de Dívida");
-
-        // Dividindo a janela em menu à esquerda e conteúdo à direita
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPanel, panelCards);
-        splitPane.setDividerLocation(200);  // Define a largura do painel de menu
-
-        // Adicionando o JSplitPane à janela principal
-        getContentPane().add(splitPane);
+        panelCards.add(new TelaEntidadeOperadoraSwing(mediatorEntidadeOperadora, this), "Entidade");
+        panelCards.add(new TelaAcaoSwing(mediatorAcao, this), "Ação");
+        panelCards.add(new TelaOperacaoSwing(mediatorOperacao, this), "Operação");
+        panelCards.add(new TelaTituloDividaSwing(mediatorTituloDivida, this), "Título de Dívida");
+        
+        getContentPane().add(panelCards, BorderLayout.CENTER);
 
         // Ações dos botões para alternar entre as telas
         btnEntidade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                toggleMenuVisibility(false);
                 cardLayout.show(panelCards, "Entidade");
             }
         });
@@ -78,6 +78,7 @@ public class TelaPrincipal extends JFrame {
         btnAcao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                toggleMenuVisibility(false);
                 cardLayout.show(panelCards, "Ação");
             }
         });
@@ -85,6 +86,7 @@ public class TelaPrincipal extends JFrame {
         btnOperacao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                toggleMenuVisibility(false);
                 cardLayout.show(panelCards, "Operação");
             }
         });
@@ -92,6 +94,7 @@ public class TelaPrincipal extends JFrame {
         btnTituloDivida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                toggleMenuVisibility(false);
                 cardLayout.show(panelCards, "Título de Dívida");
             }
         });
@@ -99,9 +102,25 @@ public class TelaPrincipal extends JFrame {
         btnSair.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();  // Fecha a aplicação
+                int confirm = JOptionPane.showConfirmDialog(TelaPrincipal.this,
+                        "Deseja realmente sair?",
+                        "Confirmação de Saída",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    dispose();  // Fecha a aplicação se o usuário confirmar
+                }
             }
         });
+    }
+
+    // Método para mostrar ou esconder o menu
+    private void toggleMenuVisibility(boolean visible) {
+        menuPanel.setVisible(visible);
+    }
+
+    public void mostrarMenuPrincipal() {
+        toggleMenuVisibility(true);
+        cardLayout.show(panelCards, "Menu"); // Volta para a tela de menu
     }
 
     public static void main(String[] args) {
