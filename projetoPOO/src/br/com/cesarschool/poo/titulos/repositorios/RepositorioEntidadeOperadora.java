@@ -153,4 +153,29 @@ public class RepositorioEntidadeOperadora {
         }
         return false;
     }
+    
+    public List<EntidadeOperadora> buscarTodos() {
+        List<EntidadeOperadora> entidades = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] dados = line.split(";");
+                long id = Long.parseLong(dados[0]);
+                String nome = dados[1];
+                boolean autorizadoAcao = Boolean.parseBoolean(dados[2]);
+                double saldoAcao = Double.parseDouble(dados[3]);
+                double saldoTituloDivida = Double.parseDouble(dados[4]);
+
+                EntidadeOperadora entidade = new EntidadeOperadora(id, nome, autorizadoAcao);
+                entidade.creditarSaldoAcao(saldoAcao);
+                entidade.creditarSaldoTituloDivida(saldoTituloDivida);
+                entidades.add(entidade);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return entidades;
+    }
 }

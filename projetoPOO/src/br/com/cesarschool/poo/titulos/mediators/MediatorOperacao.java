@@ -8,6 +8,7 @@ import br.com.cesarschool.poo.titulos.repositorios.RepositorioTransacao;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * MediatorOperacao é um singleton responsável por realizar operações
@@ -125,4 +126,9 @@ public class MediatorOperacao {
         Arrays.sort(result, (a, b) -> b.getDataHoraOperacao().compareTo(a.getDataHoraOperacao()));
         return result;
     }
+    
+    public List<EntidadeOperadora> obterTodasEntidades() {
+        return mediatorEntidadeOperadora.obterTodasEntidades();
+    }
+
 }

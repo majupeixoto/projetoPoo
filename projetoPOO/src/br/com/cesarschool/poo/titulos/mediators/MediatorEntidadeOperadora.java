@@ -1,5 +1,7 @@
 package br.com.cesarschool.poo.titulos.mediators;
 
+import java.util.List;
+
 import br.com.cesarschool.poo.titulos.entidades.EntidadeOperadora;
 import br.com.cesarschool.poo.titulos.repositorios.RepositorioEntidadeOperadora;
 
@@ -73,5 +75,9 @@ public class MediatorEntidadeOperadora {
         }
 
         return repositorioEntidadeOperadora.buscar(identificador);
+    }
+    
+    public List<EntidadeOperadora> obterTodasEntidades() {
+        return repositorioEntidadeOperadora.buscarTodos();
     }
 }

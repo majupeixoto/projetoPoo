@@ -1,9 +1,11 @@
 package br.com.cesarschool.poo.titulos.telas;
 
+import br.com.cesarschool.poo.titulos.entidades.EntidadeOperadora;
 import br.com.cesarschool.poo.titulos.mediators.MediatorOperacao;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class TelaOperacaoSwing extends JPanel {
 
@@ -11,8 +13,8 @@ public class TelaOperacaoSwing extends JPanel {
 
     private MediatorOperacao mediatorOperacao;
 
-    private JTextField txtEntidadeCredito;
-    private JTextField txtEntidadeDebito;
+    private JComboBox<String> cmbEntidadeCredito;
+    private JComboBox<String> cmbEntidadeDebito;
     private JTextField txtIdAcaoOuTitulo;
     private JTextField txtValor;
     private JCheckBox chkEhAcao;
@@ -26,13 +28,21 @@ public class TelaOperacaoSwing extends JPanel {
 
         JPanel panel = new JPanel(new GridLayout(7, 2));
 
+     // Obtém a lista de entidades e converte para uma lista de Strings com os nomes das entidades
+        List<EntidadeOperadora> entidadesOperadoras = mediatorOperacao.obterTodasEntidades();
+        List<String> entidades = entidadesOperadoras.stream()
+                .map(entidade -> entidade.getIdentificador() + " - " + entidade.getNome()) // Formato "ID - Nome"
+                .toList();
+
+        cmbEntidadeCredito = new JComboBox<>(entidades.toArray(new String[0]));
+        cmbEntidadeDebito = new JComboBox<>(entidades.toArray(new String[0]));
+
+
         panel.add(new JLabel("Entidade Crédito:"));
-        txtEntidadeCredito = new JTextField();
-        panel.add(txtEntidadeCredito);
+        panel.add(cmbEntidadeCredito);
 
         panel.add(new JLabel("Entidade Débito:"));
-        txtEntidadeDebito = new JTextField();
-        panel.add(txtEntidadeDebito);
+        panel.add(cmbEntidadeDebito);
 
         panel.add(new JLabel("ID Ação ou Título:"));
         txtIdAcaoOuTitulo = new JTextField();
@@ -63,9 +73,10 @@ public class TelaOperacaoSwing extends JPanel {
     // MÉTODOS
     private void realizarOperacao() {
         try {
-            // Coleta os dados
-            int entidadeCredito = Integer.parseInt(txtEntidadeCredito.getText());
-            int entidadeDebito = Integer.parseInt(txtEntidadeDebito.getText());
+            // Extrai o ID da entidade selecionada antes do primeiro hífen
+            int entidadeCredito = Integer.parseInt(((String) cmbEntidadeCredito.getSelectedItem()).split(" - ")[0]);
+            int entidadeDebito = Integer.parseInt(((String) cmbEntidadeDebito.getSelectedItem()).split(" - ")[0]);
+
             int idAcaoOuTitulo = Integer.parseInt(txtIdAcaoOuTitulo.getText());
             double valor = Double.parseDouble(txtValor.getText());
             boolean ehAcao = chkEhAcao.isSelected();
@@ -73,22 +84,7 @@ public class TelaOperacaoSwing extends JPanel {
             // Chama o método de realização de operação no MediatorOperacao
             String resultado = mediatorOperacao.realizarOperacao(ehAcao, entidadeCredito, entidadeDebito, idAcaoOuTitulo, valor);
 
-            // Supondo que o resultado é uma String contendo todos os dados que você quer formatar
-            String[] dados = resultado.split(";"); // Divide os dados usando o delimitador
-
-            // Formata a saída
-            StringBuilder saida = new StringBuilder();
-            for (String dado : dados) {
-                // Aqui você pode adicionar formatação específica para cada dado se necessário
-                saida.append(dado).append(";");
-            }
-
-            // Remove o último ponto e vírgula
-            if (saida.length() > 0) {
-                saida.setLength(saida.length() - 1);
-            }
-
-            txtStatus.setText(saida.toString()); // Atualiza o status com a saída formatada
+            txtStatus.setText(resultado);
         } catch (NumberFormatException ex) {
             txtStatus.setText("Erro: Verifique se todos os campos estão preenchidos corretamente.");
         } catch (Exception ex) {
