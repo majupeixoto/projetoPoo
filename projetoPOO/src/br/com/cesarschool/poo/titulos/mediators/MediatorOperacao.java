@@ -130,5 +130,13 @@ public class MediatorOperacao {
     public List<EntidadeOperadora> obterTodasEntidades() {
         return mediatorEntidadeOperadora.obterTodasEntidades();
     }
+    
+    public List<String> obterIdsAcoes() {
+        return mediatorAcao.obterIdsAcoes();
+    }
+
+    public List<String> obterIdsTitulos() {
+        return mediatorTituloDivida.obterIdsTitulos();
+    }
 
 }

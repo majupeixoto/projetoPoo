@@ -1,26 +1,27 @@
 package br.com.cesarschool.poo.titulos.mediators;
 
-
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.cesarschool.poo.titulos.entidades.Acao;
 import br.com.cesarschool.poo.titulos.repositorios.RepositorioAcao;
 
 public class MediatorAcao {
-	private static MediatorAcao instanciaUnica;
-	private final RepositorioAcao repositorioAcao = new RepositorioAcao();
-	
-	private MediatorAcao() {}
-	
-	public static MediatorAcao getInstance() {
-		if(instanciaUnica == null) {
-			instanciaUnica = new MediatorAcao();
-		}
-		return instanciaUnica;
-	}
-	
-	private String validar(Acao acao) {
-		if (acao.getIdentificador() < 1 || acao.getIdentificador() > 99999) {
+    private static MediatorAcao instanciaUnica;
+    private final RepositorioAcao repositorioAcao = new RepositorioAcao();
+    
+    private MediatorAcao() {}
+    
+    public static MediatorAcao getInstance() {
+        if(instanciaUnica == null) {
+            instanciaUnica = new MediatorAcao();
+        }
+        return instanciaUnica;
+    }
+    
+    private String validar(Acao acao) {
+        if (acao.getIdentificador() < 1 || acao.getIdentificador() > 99999) {
             return "Identificador deve estar entre 1 e 99999.";
         }
 
@@ -41,10 +42,10 @@ public class MediatorAcao {
         }
 
         return null;
-	}
-	
-	public String incluir(Acao acao) {
-		String mensagemValidar = validar(acao);
+    }
+    
+    public String incluir(Acao acao) {
+        String mensagemValidar = validar(acao);
         
         if (mensagemValidar != null) {
             return mensagemValidar;
@@ -57,42 +58,51 @@ public class MediatorAcao {
         } else {
             return "Ação já existente";
         }
-	}
-	
-	public String alterar(Acao acao) {
-		String mensagemValidar = validar(acao);
-		
-		if(mensagemValidar != null) {
-			return mensagemValidar;
-		}
-		
-		boolean conferir = repositorioAcao.alterar(acao);
-		
-		if(conferir) {
-			return null;
-		} else {
-			return "Ação inexistente";
-		}
-	}
-	
-	public String excluir(int identificador) {
-		if (identificador < 1 || identificador > 99999) {
+    }
+    
+    public String alterar(Acao acao) {
+        String mensagemValidar = validar(acao);
+        
+        if (mensagemValidar != null) {
+            return mensagemValidar;
+        }
+        
+        boolean conferir = repositorioAcao.alterar(acao);
+        
+        if (conferir) {
+            return null;
+        } else {
+            return "Ação inexistente";
+        }
+    }
+    
+    public String excluir(int identificador) {
+        if (identificador < 1 || identificador > 99999) {
             return "Identificador deve estar entre 1 e 99999.";
         }
-		
-		boolean conferir = repositorioAcao.excluir(identificador);
+        
+        boolean conferir = repositorioAcao.excluir(identificador);
 
         if (conferir) {
             return null;
         } else {
             return "Ação inexistente";
         }
-	}
-	
-	public Acao buscar(int identificador) {
-		if (identificador < 1 || identificador > 99999) {
-	        return null;
-	    }
-	    return repositorioAcao.buscar(identificador);
-	}
+    }
+    
+    public Acao buscar(int identificador) {
+        if (identificador < 1 || identificador > 99999) {
+            return null;
+        }
+        return repositorioAcao.buscar(identificador);
+    }
+
+    // Método para obter IDs de ações
+    public List<String> obterIdsAcoes() {
+        // Aqui você supõe que o repositório possui um método para listar todas as ações
+        List<Acao> acoes = repositorioAcao.listar(); // Método que você deve ter no RepositorioAcao
+        return acoes.stream()
+                .map(acao -> String.valueOf(acao.getIdentificador())) // Convertendo para String
+                .collect(Collectors.toList());
+    }
 }
