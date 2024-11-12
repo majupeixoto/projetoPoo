@@ -47,7 +47,6 @@ public class TelaAcaoSwing extends JPanel {
 
         add(inputPanel, BorderLayout.NORTH); // Adiciona o painel ao topo
 
-        // Painel para os botões
         JPanel buttonPanel = new JPanel(new FlowLayout()); // Espaçamento harmônico
         JButton btnIncluir = new JButton("Incluir");
         JButton btnAlterar = new JButton("Alterar");
