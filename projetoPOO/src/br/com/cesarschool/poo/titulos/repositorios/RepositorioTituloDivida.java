@@ -24,7 +24,6 @@ public class RepositorioTituloDivida {
 	        String linha = tituloDivida.getIdentificador() + ";" + tituloDivida.getNome() + ";" 
 	                     + tituloDivida.getDataDeValidade() + ";" + tituloDivida.getTaxaJuros();
 	        writer.write(linha);
-	        writer.newLine(); // Adiciona a quebra de linha
 	        return true;
 	    } catch (IOException e) {
 	        e.printStackTrace();

@@ -75,7 +75,6 @@ public class TelaEntidadeOperadoraSwing extends JPanel {
 
         add(infoPanel, BorderLayout.SOUTH);
 
-        // Ação dos botões
         btnIncluir.addActionListener(e -> incluirEntidadeOperadora());
         btnAlterar.addActionListener(e -> alterarEntidadeOperadora());
         btnExcluir.addActionListener(e -> excluirEntidadeOperadora());
