@@ -16,8 +16,9 @@ public class TelaOperacaoSwing extends JPanel {
     private JComboBox<String> cmbEntidadeCredito;
     private JComboBox<String> cmbEntidadeDebito;
     private JComboBox<String> cmbIdAcaoOuTitulo;
+    private JCheckBox chkAcao;
+    private JCheckBox chkTitulo;
     private JTextField txtValor;
-    private JCheckBox chkEhAcao;
     private JTextArea txtDadosOperacao;
 
     private TelaPrincipal telaPrincipal;
@@ -30,14 +31,18 @@ public class TelaOperacaoSwing extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel panel = new JPanel(new GridLayout(6, 2, 5, 5));
+        JPanel panel = new JPanel(new GridLayout(7, 2, 5, 5));
         panel.setBorder(BorderFactory.createTitledBorder("Dados da Operação"));
-        
-        panel.add(new JLabel("É Ação? (clique uma para atualizar os dados)"));
-        chkEhAcao = new JCheckBox();
-        panel.add(chkEhAcao);
 
-        // Inicializa as JComboBox
+        chkAcao = new JCheckBox("Ação");
+        chkTitulo = new JCheckBox("Título");
+
+        panel.add(new JLabel("Tipo de Operação:"));
+        JPanel checkboxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        checkboxPanel.add(chkAcao);
+        checkboxPanel.add(chkTitulo);
+        panel.add(checkboxPanel);
+
         cmbEntidadeCredito = new JComboBox<>();
         panel.add(new JLabel("Entidade Crédito:"));
         panel.add(cmbEntidadeCredito);
@@ -45,7 +50,7 @@ public class TelaOperacaoSwing extends JPanel {
         cmbEntidadeDebito = new JComboBox<>();
         panel.add(new JLabel("Entidade Débito:"));
         panel.add(cmbEntidadeDebito);
-        
+
         cmbIdAcaoOuTitulo = new JComboBox<>();
         panel.add(new JLabel("ID Ação ou Título:"));
         panel.add(cmbIdAcaoOuTitulo);
@@ -97,20 +102,29 @@ public class TelaOperacaoSwing extends JPanel {
             }
         });
 
-        chkEhAcao.addActionListener(e -> {
-            atualizarCampoId();
-            atualizarEntidades();
+        chkAcao.addActionListener(e -> {
+            if (chkAcao.isSelected()) {
+                chkTitulo.setSelected(false);
+                atualizarEntidades(true);
+                atualizarCampoId(true);
+            } else {
+                limparCampos();
+            }
         });
 
-        cmbEntidadeCredito.addActionListener(e -> atualizarCampoId());
-        cmbEntidadeDebito.addActionListener(e -> atualizarCampoId());
+        chkTitulo.addActionListener(e -> {
+            if (chkTitulo.isSelected()) {
+                chkAcao.setSelected(false);
+                atualizarEntidades(false);
+                atualizarCampoId(false);
+            } else {
+                limparCampos(); // Limpa os campos se nenhuma opção for selecionada
+            }
+        });
 
-        // Atualiza as JComboBox ao iniciar a tela
-        atualizarEntidades();
-        atualizarCampoId();
+        limparCampos(); // Garante que os campos estejam vazios até que uma opção seja selecionada
     }
 
-    // MÉTODOS
     private void realizarOperacao() {
         try {
             int entidadeCredito = Integer.parseInt(((String) cmbEntidadeCredito.getSelectedItem()).split(" - ")[0]);
@@ -118,7 +132,7 @@ public class TelaOperacaoSwing extends JPanel {
 
             int idAcaoOuTitulo = Integer.parseInt((String) cmbIdAcaoOuTitulo.getSelectedItem());
             double valor = Double.parseDouble(txtValor.getText());
-            boolean ehAcao = chkEhAcao.isSelected();
+            boolean ehAcao = chkAcao.isSelected();
 
             String resultado = mediatorOperacao.realizarOperacao(ehAcao, entidadeCredito, entidadeDebito, idAcaoOuTitulo, valor);
 
@@ -131,26 +145,22 @@ public class TelaOperacaoSwing extends JPanel {
         }
     }
 
-    private void atualizarEntidades() {
-        List<EntidadeOperadora> entidadesOperadoras = mediatorOperacao.obterTodasEntidades();
-        List<String> entidades = entidadesOperadoras.stream()
+    private void atualizarEntidades(boolean ehAcao) {
+        List<EntidadeOperadora> todasEntidades = mediatorOperacao.obterTodasEntidades();
+        List<String> entidadesFiltradas = todasEntidades.stream()
+                .filter(entidade -> ehAcao ? entidade.getAutorizadoAcao() : true)
                 .map(entidade -> entidade.getIdentificador() + " - " + entidade.getNome())
                 .toList();
 
-        cmbEntidadeCredito.setModel(new DefaultComboBoxModel<>(entidades.toArray(new String[0])));
-        cmbEntidadeDebito.setModel(new DefaultComboBoxModel<>(entidades.toArray(new String[0])));
+        cmbEntidadeCredito.setModel(new DefaultComboBoxModel<>(entidadesFiltradas.toArray(new String[0])));
+        cmbEntidadeDebito.setModel(new DefaultComboBoxModel<>(entidadesFiltradas.toArray(new String[0])));
     }
 
-    private void atualizarCampoId() {
+    private void atualizarCampoId(boolean ehAcao) {
         cmbIdAcaoOuTitulo.removeAllItems();
 
-        List<String> ids = chkEhAcao.isSelected() 
-                           ? mediatorOperacao.obterIdsAcoes() 
-                           : mediatorOperacao.obterIdsTitulos();
-
-        for (String id : ids) {
-            cmbIdAcaoOuTitulo.addItem(id);
-        }
+        List<String> ids = ehAcao ? mediatorOperacao.obterIdsAcoes() : mediatorOperacao.obterIdsTitulos();
+        ids.forEach(cmbIdAcaoOuTitulo::addItem);
     }
 
     private void mostrarDadosOperacao(int entidadeCredito, int entidadeDebito, int idAcaoOuTitulo, double valor, boolean ehAcao) {
@@ -163,12 +173,13 @@ public class TelaOperacaoSwing extends JPanel {
 
     private void limparCampos() {
         txtValor.setText("");
-        cmbIdAcaoOuTitulo.setSelectedIndex(-1);
-        cmbEntidadeCredito.setSelectedIndex(-1);
-        cmbEntidadeDebito.setSelectedIndex(-1);
+        cmbIdAcaoOuTitulo.removeAllItems();
+        cmbEntidadeCredito.removeAllItems();
+        cmbEntidadeDebito.removeAllItems();
         txtStatus.setText("");
         txtDadosOperacao.setText("");
-        chkEhAcao.setSelected(false);
+        chkAcao.setSelected(false);
+        chkTitulo.setSelected(false);
     }
 
     private void voltarParaMenuPrincipal() {

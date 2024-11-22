@@ -97,12 +97,10 @@ public class MediatorAcao {
         return repositorioAcao.buscar(identificador);
     }
 
-    // Método para obter IDs de ações
     public List<String> obterIdsAcoes() {
-        // Aqui você supõe que o repositório possui um método para listar todas as ações
-        List<Acao> acoes = repositorioAcao.listar(); // Método que você deve ter no RepositorioAcao
+        List<Acao> acoes = repositorioAcao.listar();
         return acoes.stream()
-                .map(acao -> String.valueOf(acao.getIdentificador())) // Convertendo para String
+                .map(acao -> String.valueOf(acao.getIdentificador()))
                 .collect(Collectors.toList());
     }
 }

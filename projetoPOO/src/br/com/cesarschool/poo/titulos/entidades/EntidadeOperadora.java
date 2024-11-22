@@ -33,6 +33,12 @@ public class EntidadeOperadora {
 		this.autorizadoAcao = autorizadoAcao;
 	}
 	
+	 public EntidadeOperadora(long identificador, String nome, double autorizadoAcao) {
+	        super();
+	        this.identificador = identificador;
+	        this.nome = nome;
+	 }
+	
 	public long getIdentificador() {
 		return identificador;
 	}

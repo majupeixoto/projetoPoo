@@ -2,6 +2,8 @@ package br.com.cesarschool.poo.titulos.telas;
 
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 import javax.swing.*;
 
 import br.com.cesarschool.poo.titulos.entidades.Acao;
@@ -99,74 +101,121 @@ public class TelaAcaoSwing extends JPanel {
 
     private void incluirAcao() {
         try {
-            int identificador = Integer.parseInt(txtIdentificador.getText());
-            String nome = txtNome.getText();
-            LocalDate dataDeValidade = LocalDate.parse(txtDataDeValidade.getText());
-            double valorUnitario = Double.parseDouble(txtValorUnitario.getText());
+            String identificadorTexto = txtIdentificador.getText().trim();
+            String nome = txtNome.getText().trim();
+            String dataTexto = txtDataDeValidade.getText().trim();
+            String valorTexto = txtValorUnitario.getText().trim();
+
+            if (identificadorTexto.isEmpty() || nome.isEmpty() || dataTexto.isEmpty() || valorTexto.isEmpty()) {
+                txtStatus.setText("Erro: Todos os campos devem ser preenchidos.");
+                return;
+            }
+
+            int identificador = Integer.parseInt(identificadorTexto);
+            LocalDate dataDeValidade = LocalDate.parse(dataTexto);
+            double valorUnitario = Double.parseDouble(valorTexto);
 
             Acao acao = new Acao(identificador, nome, dataDeValidade, valorUnitario);
             String resultado = mediatorAcao.incluir(acao);
 
-            txtStatus.setText(resultado == null ? "Ação incluída com sucesso." : resultado);
-            mostrarDadosAcao(acao);
+            if (resultado == null) {
+                txtStatus.setText("Ação incluída com sucesso.");
+                mostrarDadosAcao(acao);
+            } else {
+                txtStatus.setText("Erro ao incluir ação: " + resultado);
+            }
+        } catch (NumberFormatException ex) {
+            txtStatus.setText("Erro: Identificador e valor unitário devem ser numéricos.");
+        } catch (DateTimeParseException ex) {
+            txtStatus.setText("Erro: Data de validade deve estar no formato correto (yyyy-MM-dd).");
         } catch (Exception ex) {
-            txtStatus.setText("Erro ao incluir ação: " + ex.getMessage());
+            txtStatus.setText("Erro inesperado ao incluir ação: " + ex.getMessage());
         }
     }
 
+
     private void alterarAcao() {
         try {
-            int identificador = Integer.parseInt(txtIdentificador.getText());
-            String nome = txtNome.getText();
-            LocalDate dataDeValidade = LocalDate.parse(txtDataDeValidade.getText());
-            double valorUnitario = Double.parseDouble(txtValorUnitario.getText());
+            if (txtIdentificador.getText().trim().isEmpty() || 
+                txtNome.getText().trim().isEmpty() || 
+                txtDataDeValidade.getText().trim().isEmpty() || 
+                txtValorUnitario.getText().trim().isEmpty()) {
+                
+                txtStatus.setText("Erro: Preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            int identificador = Integer.parseInt(txtIdentificador.getText().trim());
+            String nome = txtNome.getText().trim();
+            LocalDate dataDeValidade = LocalDate.parse(txtDataDeValidade.getText().trim());
+            double valorUnitario = Double.parseDouble(txtValorUnitario.getText().trim());
 
             Acao acao = new Acao(identificador, nome, dataDeValidade, valorUnitario);
             String resultado = mediatorAcao.alterar(acao);
 
-            txtStatus.setText(resultado == null ? "Ação alterada com sucesso." : resultado);
-            mostrarDadosAcao(acao);
+            if (resultado == null) {
+                txtStatus.setText("Ação alterada com sucesso.");
+                mostrarDadosAcao(acao);
+            } else {
+                txtStatus.setText("Erro ao alterar ação: " + resultado);
+            }
+        } catch (NumberFormatException ex) {
+            txtStatus.setText("Erro ao alterar ação: Identificador ou valor numérico inválido.");
+        } catch (DateTimeParseException ex) {
+            txtStatus.setText("Erro ao alterar ação: Data de validade inválida.");
         } catch (Exception ex) {
-            txtStatus.setText("Erro ao alterar ação: " + ex.getMessage());
+            txtStatus.setText("Erro inesperado ao alterar ação: " + ex.getMessage());
         }
     }
+
 
     private void excluirAcao() {
         try {
-            int identificador = Integer.parseInt(txtIdentificador.getText());
+            if (txtIdentificador.getText().trim().isEmpty()) {
+                txtStatus.setText("Erro: Informe o identificador da ação para excluí-la.");
+                return;
+            }
+
+            int identificador = Integer.parseInt(txtIdentificador.getText().trim());
             String resultado = mediatorAcao.excluir(identificador);
 
-            txtStatus.setText(resultado == null ? "Ação excluída com sucesso." : resultado);
-            txtDadosAcao.setText("");
+            if (resultado == null) {
+                txtStatus.setText("Ação excluída com sucesso.");
+                txtDadosAcao.setText("");
+            } else {
+                txtStatus.setText("Erro ao excluir ação: " + resultado);
+            }
+        } catch (NumberFormatException ex) {
+            txtStatus.setText("Erro ao excluir ação: Identificador inválido.");
         } catch (Exception ex) {
-            txtStatus.setText("Erro ao excluir ação: " + ex.getMessage());
+            txtStatus.setText("Erro inesperado ao excluir ação: " + ex.getMessage());
         }
     }
 
+
     private void buscarAcao() {
-        // Limpa os campos de nome, data e valor antes de buscar
         limparCamposDados();
 
         try {
-            int identificador = Integer.parseInt(txtIdentificador.getText());
+            int identificador = Integer.parseInt(txtIdentificador.getText().trim());
             Acao acao = mediatorAcao.buscar(identificador);
 
             if (acao != null) {
-                // Se a ação foi encontrada, preenche os campos com os dados da ação
                 txtNome.setText(acao.getNome());
                 txtDataDeValidade.setText(acao.getDataDeValidade().toString());
                 txtValorUnitario.setText(String.valueOf(acao.getValorUnitario()));
                 txtStatus.setText("Ação encontrada.");
-                mostrarDadosAcao(acao); 
+                mostrarDadosAcao(acao);
             } else {
-                txtDadosAcao.setText("");
+                txtStatus.setText("Erro ao buscar ação: Ação inexistente.");
             }
         } catch (NumberFormatException ex) {
-            txtStatus.setText("Identificador inválido. Por favor, insira um número.");
+            txtStatus.setText("Erro ao buscar ação: Identificador inválido. Insira um número válido.");
         } catch (Exception ex) {
-            txtStatus.setText("Erro ao buscar ação: " + ex.getMessage());
+            txtStatus.setText("Erro inesperado ao buscar ação: " + ex.getMessage());
         }
     }
+
     
     private void mostrarDadosAcao(Acao acao) {
         txtDadosAcao.setText("Identificador: " + acao.getIdentificador() + "\n" +
