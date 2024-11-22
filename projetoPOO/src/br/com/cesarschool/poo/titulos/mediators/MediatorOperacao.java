@@ -10,11 +10,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * MediatorOperacao é um singleton responsável por realizar operações
- * de crédito e débito entre entidades operadoras, bem como gerar
- * extratos de transações.
- */
 public class MediatorOperacao {
     private static MediatorOperacao instanciaUnica;
     private final MediatorAcao mediatorAcao = MediatorAcao.getInstance();
