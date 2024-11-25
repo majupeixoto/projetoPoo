@@ -1,23 +1,11 @@
 package br.com.cesarschool.poo.titulos.entidades;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-/*
- * Esta classe deve ter os seguintes atributos: OK
- * entidadeCredito, do tipo EntidadeOperadora
- * entidadeDebito, do tipo EntidadeOperadora
- * acao, do tipo Acao
- * tituloDivida, do tipo TituloDivida
- * valorOperacao, do tipo double
- * dataHoraOperacao, do tipo LocalDateTime
- *  
- * Deve ter um construtor público que inicializa os atributos. OK
- * Deve ter métodos get/set públicos para todos os atributos, que 
- * são read-only fora da classe.OK
- * 
- *  
- */ 
-public class Transacao {
+import br.com.cesarschool.poo.titulos.daogenerico.Entidade;
+
+public class Transacao extends Entidade{
 	private EntidadeOperadora entidadeCredito;
 	private EntidadeOperadora entidadeDebito;
 	private Acao acao;
@@ -27,6 +15,7 @@ public class Transacao {
 	
 	public Transacao(EntidadeOperadora entidadeCredito, EntidadeOperadora entidadeDebito, Acao acao, TituloDivida tituloDivida,
 			double valorOperacao, LocalDateTime dataHoraOperacao) {
+		super();
 		this.entidadeCredito = entidadeCredito;
 		this.entidadeDebito = entidadeDebito;
 		this.acao = acao;
@@ -58,5 +47,15 @@ public class Transacao {
 
     public LocalDateTime getDataHoraOperacao() {
         return dataHoraOperacao;
+    }
+    
+    @Override
+    public String getIdUnico() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        return entidadeCredito.getIdUnico() + "_" +
+               entidadeDebito.getIdUnico() + "_" +
+               acao.getIdUnico() + "_" +
+               tituloDivida.getIdUnico() + "_" +
+               dataHoraOperacao.format(formatter);
     }
 }
