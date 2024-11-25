@@ -15,6 +15,14 @@ public class EntidadeOperadora extends Entidade {
         this.nome = nome;
         this.autorizadoAcao = autorizadoAcao;
     }
+    
+    public EntidadeOperadora(long identificador, String nome, double saldoAcao) {
+        super();
+        this.identificador = identificador;
+        this.nome = nome;
+        this.saldoAcao = saldoAcao;
+        this.autorizadoAcao = false;
+    }
 
     public long getIdentificador() {
         return identificador;

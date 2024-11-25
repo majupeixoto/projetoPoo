@@ -121,14 +121,6 @@ public class MediatorOperacao {
         Arrays.sort(result, (a, b) -> b.getDataHoraOperacao().compareTo(a.getDataHoraOperacao()));
         return result;
     }
-    
-    public List<EntidadeOperadora> obterTodasEntidades() {
-        return mediatorEntidadeOperadora.obterTodasEntidades();
-    }
-    
-    public List<String> obterIdsAcoes() {
-        return mediatorAcao.obterIdsAcoes();
-    }
 
     public List<String> obterIdsTitulos() {
         return mediatorTituloDivida.obterIdsTitulos();

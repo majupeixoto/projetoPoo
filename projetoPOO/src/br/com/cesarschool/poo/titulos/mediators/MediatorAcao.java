@@ -96,11 +96,4 @@ public class MediatorAcao {
         }
         return repositorioAcao.buscar(identificador);
     }
-
-    public List<String> obterIdsAcoes() {
-        List<Acao> acoes = repositorioAcao.listar();
-        return acoes.stream()
-                .map(acao -> String.valueOf(acao.getIdentificador()))
-                .collect(Collectors.toList());
-    }
 }

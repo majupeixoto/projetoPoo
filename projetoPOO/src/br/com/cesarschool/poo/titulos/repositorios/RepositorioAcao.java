@@ -21,17 +21,14 @@ public class RepositorioAcao extends RepositorioGeral {
         if (dao.buscar(String.valueOf(acao.getIdentificador())) == null) {
             return false;
         }
-        // Altera a ação no repositório
         return dao.alterar(acao);
     }
 
     public boolean excluir(int identificador) {
-        // Exclui a ação com o identificador fornecido
         return dao.excluir(String.valueOf(identificador));
     }
 
     public Acao buscar(int identificador) {
-        // Busca e retorna a ação com o identificador fornecido
         return (Acao) dao.buscar(String.valueOf(identificador));
     }
 }

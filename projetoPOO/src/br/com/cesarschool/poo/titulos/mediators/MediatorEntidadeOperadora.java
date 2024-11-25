@@ -76,8 +76,5 @@ public class MediatorEntidadeOperadora {
 
         return repositorioEntidadeOperadora.buscar(identificador);
     }
-    
-    public List<EntidadeOperadora> obterTodasEntidades() {
-        return repositorioEntidadeOperadora.buscarTodos();
-    }
+
 }
