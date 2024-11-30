@@ -1,6 +1,6 @@
 package br.com.cesarschool.poo.titulos.repositorios;
 
-import br.com.cesarschool.poo.titulos.daogenerico.DAOSerializadorObjetos;
+import br.gov.cesarschool.poo.daogenerico.DAOSerializadorObjetos;
 
 public abstract class RepositorioGeral {
     protected DAOSerializadorObjetos dao;

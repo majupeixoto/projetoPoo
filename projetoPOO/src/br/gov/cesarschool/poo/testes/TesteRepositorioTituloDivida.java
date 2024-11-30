@@ -1,4 +1,4 @@
-package br.com.cesarschool.poo.titulos.testes;
+package br.gov.cesarschool.poo.testes;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
-import br.com.cesarschool.poo.titulos.daogenerico.DAOSerializadorObjetos;
 import br.com.cesarschool.poo.titulos.entidades.TituloDivida;
 import br.com.cesarschool.poo.titulos.repositorios.RepositorioGeral;
 import br.com.cesarschool.poo.titulos.repositorios.RepositorioTituloDivida;
+import br.gov.cesarschool.poo.daogenerico.DAOSerializadorObjetos;
 
 public class TesteRepositorioTituloDivida extends TesteGeral {
 	private static final RepositorioTituloDivida DAO = new RepositorioTituloDivida();

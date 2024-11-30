@@ -1,4 +1,4 @@
-package br.com.cesarschool.poo.titulos.daogenerico;
+package br.gov.cesarschool.poo.daogenerico;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

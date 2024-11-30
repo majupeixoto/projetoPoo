@@ -2,7 +2,7 @@ package br.com.cesarschool.poo.titulos.entidades;
 
 import java.time.LocalDate;
 
-import br.com.cesarschool.poo.titulos.daogenerico.Entidade;
+import br.gov.cesarschool.poo.daogenerico.Entidade;
 
 public class Ativo extends Entidade {
     private int identificador; // Read-only fora da classe

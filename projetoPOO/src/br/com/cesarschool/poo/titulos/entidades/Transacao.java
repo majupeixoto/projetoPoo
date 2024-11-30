@@ -3,7 +3,7 @@ package br.com.cesarschool.poo.titulos.entidades;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import br.com.cesarschool.poo.titulos.daogenerico.Entidade;
+import br.gov.cesarschool.poo.daogenerico.Entidade;
 
 public class Transacao extends Entidade{
 	private EntidadeOperadora entidadeCredito;

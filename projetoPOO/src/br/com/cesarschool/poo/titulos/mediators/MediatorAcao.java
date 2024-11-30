@@ -10,16 +10,16 @@ import br.com.cesarschool.poo.titulos.repositorios.RepositorioAcao;
 public class MediatorAcao {
     private static MediatorAcao instanciaUnica;
     private final RepositorioAcao repositorioAcao = new RepositorioAcao();
-    
+
     private MediatorAcao() {}
-    
+
     public static MediatorAcao getInstance() {
         if(instanciaUnica == null) {
             instanciaUnica = new MediatorAcao();
         }
         return instanciaUnica;
     }
-    
+
     private String validar(Acao acao) {
         if (acao.getIdentificador() < 1 || acao.getIdentificador() > 99999) {
             return "Identificador deve estar entre 1 e 99999.";
@@ -43,44 +43,44 @@ public class MediatorAcao {
 
         return null;
     }
-    
+
     public String incluir(Acao acao) {
         String mensagemValidar = validar(acao);
-        
+
         if (mensagemValidar != null) {
             return mensagemValidar;
         }
-        
+
         boolean conferir = repositorioAcao.incluir(acao);
-        
+
         if (conferir) {
             return null;
         } else {
             return "Ação já existente";
         }
     }
-    
+
     public String alterar(Acao acao) {
         String mensagemValidar = validar(acao);
-        
+
         if (mensagemValidar != null) {
             return mensagemValidar;
         }
-        
+
         boolean conferir = repositorioAcao.alterar(acao);
-        
+
         if (conferir) {
             return null;
         } else {
             return "Ação inexistente";
         }
     }
-    
+
     public String excluir(int identificador) {
         if (identificador < 1 || identificador > 99999) {
             return "Identificador deve estar entre 1 e 99999.";
         }
-        
+
         boolean conferir = repositorioAcao.excluir(identificador);
 
         if (conferir) {
@@ -89,11 +89,18 @@ public class MediatorAcao {
             return "Ação inexistente";
         }
     }
-    
+
     public Acao buscar(int identificador) {
         if (identificador < 1 || identificador > 99999) {
             return null;
         }
         return repositorioAcao.buscar(identificador);
+    }
+
+    public List<String> obterIdsAcoes() {
+        List<Acao> acoes = repositorioAcao.listar();
+        return acoes.stream()
+                .map(acao -> String.valueOf(acao.getIdentificador()))
+                .collect(Collectors.toList());
     }
 }

@@ -1,4 +1,4 @@
-package br.com.cesarschool.poo.titulos.testes;
+package br.gov.cesarschool.poo.testes;
 
 import java.io.File;
 import java.io.Serializable;
@@ -6,8 +6,8 @@ import java.io.Serializable;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
-import br.com.cesarschool.poo.titulos.daogenerico.DAOSerializadorObjetos;
-import br.com.cesarschool.poo.titulos.daogenerico.Entidade;
+import br.gov.cesarschool.poo.daogenerico.DAOSerializadorObjetos;
+import br.gov.cesarschool.poo.daogenerico.Entidade;
 
 public class TestesDAOSerializador extends TesteGeral {
 	private static final String NOME_2 = "ENT NEW";

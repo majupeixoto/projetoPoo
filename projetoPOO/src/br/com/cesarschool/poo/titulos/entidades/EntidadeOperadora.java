@@ -1,6 +1,6 @@
 package br.com.cesarschool.poo.titulos.entidades;
 
-import br.com.cesarschool.poo.titulos.daogenerico.Entidade;
+import br.gov.cesarschool.poo.daogenerico.Entidade;
 
 public class EntidadeOperadora extends Entidade {
     private long identificador;
