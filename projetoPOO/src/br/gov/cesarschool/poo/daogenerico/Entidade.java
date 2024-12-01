@@ -12,13 +12,11 @@ public abstract class Entidade implements Serializable {
     private String usuarioInclusao;
     private String usuarioUltimaAlteracao;
     
-    // Construtor sem parâmetros
     public Entidade() {
         this.dataHoraInclusao = LocalDateTime.now();
         this.dataHoraUltimaAlteracao = LocalDateTime.now();
     }
     
-    // Métodos Getters e Setters
     public LocalDateTime getDataHoraInclusao() {
         return dataHoraInclusao;
     }

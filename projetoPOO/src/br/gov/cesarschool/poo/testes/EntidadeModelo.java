@@ -3,7 +3,7 @@ package br.gov.cesarschool.poo.testes;
 import br.com.cesarschool.poo.titulos.utils.Comparavel;
 import br.gov.cesarschool.poo.daogenerico.Entidade;
 
-class EntidadeModelo extends Entidade implements Comparavel {
+public class EntidadeModelo extends Entidade implements Comparavel {
 	private int id; 
 	private String nome;
 	EntidadeModelo(int id, String nome) {

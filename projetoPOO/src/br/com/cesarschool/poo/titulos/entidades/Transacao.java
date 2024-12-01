@@ -51,11 +51,17 @@ public class Transacao extends Entidade{
     
     @Override
     public String getIdUnico() {
+        String idAcaoOuTitulo = (acao != null) 
+                ? acao.getIdUnico() 
+                : (tituloDivida != null ? tituloDivida.getIdUnico() : "");
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        return entidadeCredito.getIdUnico() + "_" +
-               entidadeDebito.getIdUnico() + "_" +
-               acao.getIdUnico() + "_" +
-               tituloDivida.getIdUnico() + "_" +
-               dataHoraOperacao.format(formatter);
+        String dataHoraFormatada = dataHoraOperacao.format(formatter);
+
+        return entidadeCredito.getIdUnico() + "_" + 
+               entidadeDebito.getIdUnico() + "_" + 
+               idAcaoOuTitulo + "_" + 
+               dataHoraFormatada;
     }
+
 }

@@ -1,7 +1,6 @@
 package br.gov.cesarschool.poo.testes;
 
 import java.io.File;
-
 import br.gov.cesarschool.poo.daogenerico.Entidade;
 import br.gov.cesarschool.poo.testes.TestesDAOSerializador.EntidadeTeste;
 
@@ -33,8 +32,7 @@ public class TesteGeral {
 		return obterNomeArquivo(NOME_DIR, ent);
 	}
 	protected String obterNomeArquivo(String dir, Entidade ent) {
-	    return dir + SEP_ARQUIVO + ent.getIdUnico() + ".ser";
+		return dir + SEP_ARQUIVO + ent.getIdUnico();
 	}
-
 
 }
