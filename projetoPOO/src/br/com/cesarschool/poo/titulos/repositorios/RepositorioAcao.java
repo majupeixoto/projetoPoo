@@ -1,173 +1,56 @@
 package br.com.cesarschool.poo.titulos.repositorios;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import br.com.cesarschool.poo.titulos.entidades.Acao;
 import br.gov.cesarschool.poo.daogenerico.DAOSerializadorObjetos;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RepositorioAcao extends RepositorioGeral{
-	private static final String FILE_CAMINHO = "src/br/com/cesarschool/poo/titulos/repositorios/Acao.txt";
+public class RepositorioAcao extends RepositorioGeral {
 
-	public boolean incluir(Acao acao) {		
-		if(idExiste(acao.getIdentificador())) {
-			 return false;
-		 }
+    private static final String DIRETORIO_REPOSITORIO = "Acao";  // Caminho do diretório
+    private DAOSerializadorObjetos dao;
 
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO, true))){
-			String linha = acao.getIdentificador() + ";" + acao.getNome() + ";" + acao.getDataDeValidade() + ";" + acao.getValorUnitario();
-			writer.write(linha);
-			writer.newLine();
-			return true;
-		} catch(IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+    // Construtor da classe RepositorioAcao
+    public RepositorioAcao() {
+        this.dao = new DAOSerializadorObjetos(Acao.class); // Instancia o DAO para a classe Acao
+    }
 
-	}
+    @Override
+    protected Class<?> getClasseEntidade() {
+        return Acao.class;
+    }
 
-	public boolean alterar(Acao acao) {
-	    List<String> linhas = new ArrayList<>();
-	    boolean encontrado = false;
+    public DAOSerializadorObjetos getDao() {
+        return dao;
+    }
 
-	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
-	        String line;
-	        while ((line = reader.readLine()) != null) {
-	            String[] frases = line.split(";");
-	            int idPresente = Integer.parseInt(frases[0]);
+    // Método para incluir uma ação
+    public boolean incluir(Acao acao) {
+        return dao.incluir(acao);  // Chama o método incluir do DAOSerializadorObjetos
+    }
 
-	            if (idPresente == acao.getIdentificador()) {
-	                linhas.add(acao.getIdentificador() + ";" + acao.getNome() + ";" + acao.getDataDeValidade() + ";" + acao.getValorUnitario());
-	                encontrado = true;
-	            } else {
-	                linhas.add(line);
-	            }
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+    // Método para alterar uma ação
+    public boolean alterar(Acao acao) {
+        return dao.alterar(acao);  // Chama o método alterar do DAOSerializadorObjetos
+    }
 
-	    if (!encontrado) {
-	        return false;
-	    }
+    // Método para excluir uma ação pelo identificador
+    public boolean excluir(int identificador) {
+        return dao.excluir(String.valueOf(identificador));  // Converte identificador para String e chama o método excluir do DAOSerializadorObjetos
+    }
 
-	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
-	        for (String linha : linhas) {
-	            writer.write(linha);
-	            writer.newLine();
-	        }
-	        return true;
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
-	}	
+    // Método para buscar uma ação pelo identificador
+    public Acao buscar(int identificador) {
+        return (Acao) dao.buscar(String.valueOf(identificador));  // Converte identificador para String e chama o método buscar do DAOSerializadorObjetos
+    }
 
-	public boolean excluir(int identificador) {
-		List<String> linhas = new ArrayList<>();
-	    boolean encontrado = false;
-
-	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
-	        String line;
-	        while ((line = reader.readLine()) != null) {
-	            String[] frases = line.split(";");
-	            int idPresente = Integer.parseInt(frases[0]);
-
-	            if (idPresente != identificador) {
-	                linhas.add(line);
-	            } else {
-	                encontrado = true;
-	            }
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
-
-	    if (!encontrado) {
-            return false;
+    // Método para listar todas as ações
+    public List<Acao> listar() {
+        // Obtém todas as ações do DAO e as converte para uma lista de Acao
+        List<Acao> listaAcoes = new ArrayList<>();
+        for (var entidade : dao.buscarTodos()) {
+            listaAcoes.add((Acao) entidade);  // Adiciona a ação na lista
         }
-
-	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CAMINHO))) {
-            for (String linha : linhas) {
-                writer.write(linha);
-                writer.newLine();
-            }
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-	}
-
-
-	public Acao buscar(int identificador) {
-
-		try(BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))){
-			String line;
-            while ((line = reader.readLine()) != null) {
-                String[] frases = line.split(";");
-                int idPresente = Integer.parseInt(frases[0]);
-
-                if (idPresente == identificador) {
-                    String nome = frases[1];
-                    LocalDate dataValidade = LocalDate.parse(frases[2], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    double valorUnitario = Double.parseDouble(frases[3]);
-                    return new Acao(identificador, nome, dataValidade, valorUnitario);
-                }
-            }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private boolean idExiste(int identificador) {
-	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
-	        String line;
-	        while ((line = reader.readLine()) != null) {
-	            String[] frases = line.split(";");
-	            int idPresente = Integer.parseInt(frases[0]);
-
-	            if (idPresente == identificador) {
-	                return true;
-	            }
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	    return false;
-	}
-	
-	public List<Acao> listar() {
-	    List<Acao> listaAcoes = new ArrayList<>();
-	    
-	    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_CAMINHO))) {
-	        String line;
-	        while ((line = reader.readLine()) != null) {
-	            String[] frases = line.split(";");
-	            int identificador = Integer.parseInt(frases[0]);
-	            String nome = frases[1];
-	            LocalDate dataValidade = LocalDate.parse(frases[2], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-	            double valorUnitario = Double.parseDouble(frases[3]);
-	            
-	            Acao acao = new Acao(identificador, nome, dataValidade, valorUnitario);
-	            listaAcoes.add(acao);
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	    
-	    return listaAcoes;
-	}
-
+        return listaAcoes;
+    }
 }
