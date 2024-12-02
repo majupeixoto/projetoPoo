@@ -10,25 +10,23 @@ public class DAOSerializadorObjetos {
     private static final String SEP_ARQUIVO = File.separator;
     private final String nomeDiretorio;
 
-    // Construtor que define o diretório baseado na classe da entidade
     public DAOSerializadorObjetos(Class<?> tipoEntidade) {
         this.nomeDiretorio = PONTO + SEP_ARQUIVO + tipoEntidade.getSimpleName();
         File diretorio = new File(nomeDiretorio);
         if (!diretorio.exists()) {
-            diretorio.mkdir(); // Cria o diretório, caso não exista
+            diretorio.mkdir();
         }
     }
 
-    // Método para incluir uma entidade
     public boolean incluir(Entidade entidade) {
         if (entidade == null) {
-            return false; // Verifica se a entidade é nula
+            return false;
         }
 
         File arquivo = new File(nomeDiretorio + SEP_ARQUIVO + entidade.getIdUnico());
 
         if (arquivo.exists()) {
-            return false; // Arquivo já existe
+            return false;
         }
 
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo))) {
@@ -41,15 +39,14 @@ public class DAOSerializadorObjetos {
         }
     }
 
-    // Método para alterar uma entidade existente
     public boolean alterar(Entidade entidade) {
         if (entidade == null) {
-            return false; // Verifica se a entidade é nula
+            return false;
         }
 
         File arquivo = new File(nomeDiretorio + SEP_ARQUIVO + entidade.getIdUnico());
         if (!arquivo.exists()) {
-            return false; // Arquivo não existe
+            return false;
         }
 
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo))) {
@@ -62,25 +59,23 @@ public class DAOSerializadorObjetos {
         }
     }
 
-    // Método para excluir uma entidade pelo ID único
     public boolean excluir(String idUnico) {
         if (idUnico == null || idUnico.isEmpty()) {
-            return false; // Verifica se o ID é válido
+            return false;
         }
 
         File arquivo = new File(nomeDiretorio + SEP_ARQUIVO + idUnico);
         return arquivo.exists() && arquivo.delete();
     }
 
-    // Método para buscar uma entidade pelo ID único
     public Entidade buscar(String idUnico) {
         if (idUnico == null || idUnico.isEmpty()) {
-            return null; // Verifica se o ID é válido
+            return null;
         }
 
         File arquivo = new File(nomeDiretorio + SEP_ARQUIVO + idUnico);
         if (!arquivo.exists()) {
-            return null; // Arquivo não encontrado
+            return null;
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
@@ -91,13 +86,12 @@ public class DAOSerializadorObjetos {
         }
     }
 
-    // Método para buscar todas as entidades no diretório
     public Entidade[] buscarTodos() {
         File diretorio = new File(nomeDiretorio);
         File[] arquivos = diretorio.listFiles();
 
         if (arquivos == null || arquivos.length == 0) {
-            return new Entidade[0]; // Se não houver arquivos, retorna um array vazio
+            return new Entidade[0];
         }
 
         List<Entidade> lista = new ArrayList<>();

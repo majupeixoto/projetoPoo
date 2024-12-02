@@ -9,15 +9,14 @@ import java.util.List;
 
 public class RepositorioAcao extends RepositorioGeral {
 	
-    private static final String DIRETORIO_REPOSITORIO = "Acao";  // Caminho do diretório
+    private static final String DIRETORIO_REPOSITORIO = "Acao";
     private DAOSerializadorObjetos dao;
 
-    // Construtor da classe RepositorioAcao
     public RepositorioAcao() {
-        this.dao = new DAOSerializadorObjetos(Acao.class); // Instancia o DAO para a classe Acao
+        this.dao = new DAOSerializadorObjetos(Acao.class);
         File baseDir = new File(DIRETORIO_REPOSITORIO);
 		if (!baseDir.exists()) {
-			baseDir.mkdirs(); // Cria o diretório se ele não existir
+			baseDir.mkdirs();
 		}
     }
 
@@ -30,32 +29,26 @@ public class RepositorioAcao extends RepositorioGeral {
         return dao;
     }
 
-    // Método para incluir uma ação
     public boolean incluir(Acao acao) {
-        return dao.incluir(acao);  // Chama o método incluir do DAOSerializadorObjetos
+        return dao.incluir(acao);
     }
 
-    // Método para alterar uma ação
     public boolean alterar(Acao acao) {
-        return dao.alterar(acao);  // Chama o método alterar do DAOSerializadorObjetos
+        return dao.alterar(acao);
     }
 
-    // Método para excluir uma ação pelo identificador
     public boolean excluir(int identificador) {
-        return dao.excluir(String.valueOf(identificador));  // Converte identificador para String e chama o método excluir do DAOSerializadorObjetos
+        return dao.excluir(String.valueOf(identificador));
     }
 
-    // Método para buscar uma ação pelo identificador
     public Acao buscar(int identificador) {
-        return (Acao) dao.buscar(String.valueOf(identificador));  // Converte identificador para String e chama o método buscar do DAOSerializadorObjetos
+        return (Acao) dao.buscar(String.valueOf(identificador));
     }
 
-    // Método para listar todas as ações
     public List<Acao> listar() {
-        // Obtém todas as ações do DAO e as converte para uma lista de Acao
         List<Acao> listaAcoes = new ArrayList<>();
         for (var entidade : dao.buscarTodos()) {
-            listaAcoes.add((Acao) entidade);  // Adiciona a ação na lista
+            listaAcoes.add((Acao) entidade);
         }
         return listaAcoes;
     }
