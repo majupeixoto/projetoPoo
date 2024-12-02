@@ -9,7 +9,7 @@ public abstract class RepositorioGeral {
         this.dao = new DAOSerializadorObjetos(getClasseEntidade());
     }
 
-    protected abstract Class<?> getClasseEntidade();
+    public abstract Class<?> getClasseEntidade();
 
     public DAOSerializadorObjetos getDao() {
         return this.dao;

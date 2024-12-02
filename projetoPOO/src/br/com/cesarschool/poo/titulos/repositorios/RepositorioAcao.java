@@ -2,21 +2,27 @@ package br.com.cesarschool.poo.titulos.repositorios;
 
 import br.com.cesarschool.poo.titulos.entidades.Acao;
 import br.gov.cesarschool.poo.daogenerico.DAOSerializadorObjetos;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioAcao extends RepositorioGeral {
-
+	
     private static final String DIRETORIO_REPOSITORIO = "Acao";  // Caminho do diretório
     private DAOSerializadorObjetos dao;
 
     // Construtor da classe RepositorioAcao
     public RepositorioAcao() {
         this.dao = new DAOSerializadorObjetos(Acao.class); // Instancia o DAO para a classe Acao
+        File baseDir = new File(DIRETORIO_REPOSITORIO);
+		if (!baseDir.exists()) {
+			baseDir.mkdirs(); // Cria o diretório se ele não existir
+		}
     }
 
     @Override
-    protected Class<?> getClasseEntidade() {
+    public Class<?> getClasseEntidade() {
         return Acao.class;
     }
 

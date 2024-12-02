@@ -3,9 +3,10 @@ package br.com.cesarschool.poo.titulos.entidades;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import br.com.cesarschool.poo.titulos.utils.Comparavel;
 import br.gov.cesarschool.poo.daogenerico.Entidade;
 
-public class Transacao extends Entidade{
+public class Transacao extends Entidade implements Comparavel{
 	private EntidadeOperadora entidadeCredito;
 	private EntidadeOperadora entidadeDebito;
 	private Acao acao;
@@ -58,10 +59,18 @@ public class Transacao extends Entidade{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String dataHoraFormatada = dataHoraOperacao.format(formatter);
 
-        return entidadeCredito.getIdUnico() + "_" + 
-               entidadeDebito.getIdUnico() + "_" + 
-               idAcaoOuTitulo + "_" + 
+        return entidadeCredito.getIdUnico() + "-" + 
+               entidadeDebito.getIdUnico() + "-" + 
+               idAcaoOuTitulo + "-" + 
                dataHoraFormatada;
     }
-
+    
+    @Override
+    public int comparar(Comparavel c) {
+        if (c instanceof Transacao) {
+            Transacao outraTransacao = (Transacao) c;
+            return (this.dataHoraOperacao.compareTo(outraTransacao.dataHoraOperacao)) * - 1;
+        }
+        throw new IllegalArgumentException("Erro.");
+    }
 }
